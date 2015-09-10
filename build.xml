@@ -1,0 +1,87 @@
+<!-- ====================================================================== 
+23 déc. 2008 11:16:57                                                        
+
+Calculette project    
+compilation du projet Calculette
+
+Lionel                                                                
+====================================================================== 
+-->
+<project name="Lexer project" default="default">
+  <property name="JFlexLib" location="lib"/>
+  <property name="CUPLib" location="lib"/>
+  <property name="lib.dir" location="lib"/>
+  <property name="src.dir" location="src"/>
+  <property name="bin.dir" location="bin"/>
+  <property name="parser.dir" location="parser"/>
+  <property name="lexer.dir" location="lexer"/>
+  
+  <description>
+    compilation du projet Lexer
+  </description>
+  
+  <!-- ================================= 
+       target: default              
+       =================================
+  -->
+  <target name="default" depends="calc" description="compilation du projet Calculette">
+    <java classname="Main" classpath=".:${bin.dir}:${lib.dir}/java-cup-11a-runtime.jar" output="Output.txt">
+      <arg value="Essai.txt"/>
+    </java>
+  </target>
+  
+    <!-- ================================= 
+       target: calc              
+       =================================
+    -->
+    <target name="calc" depends="parser, lexer" description="compilation        du projet Calculette">
+      <mkdir dir="${bin.dir}"/>
+      <javac srcdir="${src.dir}" destdir="${bin.dir}" classpath="${lib.dir}/java-cup-11a-runtime.jar" debug="on"/>
+    </target>
+    
+  <!-- =================================
+       target: lexer
+       ================================= 
+  -->  
+  <target name="lexer">
+    <taskdef name="jflex" classname="JFlex.anttask.JFlexTask">
+      <classpath location="${JFlexLib}/JFlex.jar"/></taskdef><jflex file="${lexer.dir}/calculette.jflex" destdir="${src.dir}"/>
+  </target>
+  
+  <!-- ================================= 
+       target: parser              
+       ================================= 
+  -->
+  <target name="parser" description="Compilation du parseur">
+    <taskdef name="cup" classname="java_cup.anttask.CUPTask">
+      <classpath location="${CUPLib}/java-cup-11a.jar"/>
+    </taskdef>
+    <cup srcfile="${parser.dir}/calculette.cup" destdir="${src.dir}" parser="CalculetteParser" symbols="CalculetteSymbol" dump_grammar="true"/>
+  </target>
+  
+  <!-- ================================= 
+       target: clean              
+       ================================= 
+  -->
+  <target name="clean" description="supprimer les fichiers générés durant la compilation">
+      	<delete dir="bin"/>
+      	<delete dir="Output.txt"/>
+  </target>
+  
+    <!-- ================================= 
+       target: test             
+       ================================= 
+  -->
+  <target name="test" description="tests pour vérifier la validité et la solidité du projet">
+    <echo message="Debut du test de la Calculatrice" /> 
+    
+
+	<exec executable="cat" > 
+	    <arg value="output.txt"/>
+	</exec>
+	
+	
+	<echo message="Fin du test." />
+  </target>
+  
+</project>
