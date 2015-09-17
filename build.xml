@@ -34,7 +34,7 @@ Lionel
        target: calc              
        =================================
     -->
-    <target name="calc" depends="parser, lexer" description="compilation du projet">
+    <target name="projet" depends="parser, lexer" description="compilation du projet">
       <mkdir dir="${bin.dir}"/>
       <javac srcdir="${src.dir}" destdir="${bin.dir}" classpath="${lib.dir}/java-cup-11a-runtime.jar" debug="on"/>
     </target>
@@ -45,7 +45,7 @@ Lionel
   -->  
   <target name="lexer">
     <taskdef name="jflex" classname="JFlex.anttask.JFlexTask">
-      <classpath location="${JFlexLib}/JFlex.jar"/></taskdef><jflex file="${lexer.dir}/lexer.jflex" destdir="${src.dir}"/>
+      <classpath location="${JFlexLib}/JFlex.jar"/></taskdef><jflex file="Lexer.jflex" destdir="${src.dir}"/>
   </target>
   
   <!-- ================================= 
@@ -56,7 +56,7 @@ Lionel
     <taskdef name="cup" classname="java_cup.anttask.CUPTask">
       <classpath location="${CUPLib}/java-cup-11a.jar"/>
     </taskdef>
-    <cup srcfile="${parser.dir}/projet.cup" destdir="${src.dir}" parser="Parser" symbols="Symbol" dump_grammar="true"/>
+    <cup srcfile="projet.cup" destdir="${src.dir}" parser="Parser" symbols="SymbolParser" dump_grammar="true"/>
   </target>
   
   <!-- ================================= 

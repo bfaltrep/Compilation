@@ -1,0 +1,12 @@
+
+import java_cup.runtime.*;
+import java.util.Vector;
+import java.io.*;
+
+terminal int TYPE;
+terminal int PROCEDURE;
+
+start with axiom;
+
+axiom ::=   TYPE.t 
+			{: System.out.printf("Le type est %d",t); :} 
