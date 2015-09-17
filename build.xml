@@ -1,8 +1,8 @@
 <!-- ====================================================================== 
 23 déc. 2008 11:16:57                                                        
 
-Calculette project    
-compilation du projet Calculette
+projet project    
+compilation du projet projet
 
 Lionel                                                                
 ====================================================================== 
@@ -24,7 +24,7 @@ Lionel
        target: default              
        =================================
   -->
-  <target name="default" depends="calc" description="compilation du projet Calculette">
+  <target name="default" depends="projet" description="compilation du projet">
     <java classname="Main" classpath=".:${bin.dir}:${lib.dir}/java-cup-11a-runtime.jar" output="Output.txt">
       <arg value="Essai.txt"/>
     </java>
@@ -34,7 +34,7 @@ Lionel
        target: calc              
        =================================
     -->
-    <target name="calc" depends="parser, lexer" description="compilation        du projet Calculette">
+    <target name="calc" depends="parser, lexer" description="compilation du projet">
       <mkdir dir="${bin.dir}"/>
       <javac srcdir="${src.dir}" destdir="${bin.dir}" classpath="${lib.dir}/java-cup-11a-runtime.jar" debug="on"/>
     </target>
@@ -45,7 +45,7 @@ Lionel
   -->  
   <target name="lexer">
     <taskdef name="jflex" classname="JFlex.anttask.JFlexTask">
-      <classpath location="${JFlexLib}/JFlex.jar"/></taskdef><jflex file="${lexer.dir}/calculette.jflex" destdir="${src.dir}"/>
+      <classpath location="${JFlexLib}/JFlex.jar"/></taskdef><jflex file="${lexer.dir}/lexer.jflex" destdir="${src.dir}"/>
   </target>
   
   <!-- ================================= 
@@ -56,7 +56,7 @@ Lionel
     <taskdef name="cup" classname="java_cup.anttask.CUPTask">
       <classpath location="${CUPLib}/java-cup-11a.jar"/>
     </taskdef>
-    <cup srcfile="${parser.dir}/calculette.cup" destdir="${src.dir}" parser="CalculetteParser" symbols="CalculetteSymbol" dump_grammar="true"/>
+    <cup srcfile="${parser.dir}/projet.cup" destdir="${src.dir}" parser="Parser" symbols="Symbol" dump_grammar="true"/>
   </target>
   
   <!-- ================================= 
@@ -73,15 +73,15 @@ Lionel
        ================================= 
   -->
   <target name="test" description="tests pour vérifier la validité et la solidité du projet">
-    <echo message="Debut du test de la Calculatrice" /> 
+    <echo message="Debut du test du Projet." /> 
     
 
-	<exec executable="cat" > 
-	    <arg value="output.txt"/>
-	</exec>
-	
-	
-	<echo message="Fin du test." />
+  	<exec executable="cat" > 
+  	    <arg value="output.txt"/>
+  	</exec>
+  	
+  	
+  	<echo message="Fin du test." />
   </target>
   
 </project>
