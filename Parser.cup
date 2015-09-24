@@ -5,8 +5,11 @@ import java.io.*;
 
 terminal int TYPE;
 terminal int PROCEDURE;
+non terminal axiom;
+
 
 start with axiom;
 
-axiom ::=   TYPE.t 
-			{: System.out.printf("Le type est %d",t); :} 
+axiom ::=   TYPE 
+			{: System.out.printf("Le type est ..."); :} 
+			;

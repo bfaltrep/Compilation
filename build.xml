@@ -11,7 +11,6 @@ Lionel
   <property name="JFlexLib" location="lib"/>
   <property name="CUPLib" location="lib"/>
   <property name="lib.dir" location="lib"/>
-  <property name="src.dir" location="src"/>
   <property name="bin.dir" location="bin"/>
   <property name="parser.dir" location="parser"/>
   <property name="lexer.dir" location="lexer"/>
@@ -36,7 +35,7 @@ Lionel
     -->
     <target name="projet" depends="parser, lexer" description="compilation du projet">
       <mkdir dir="${bin.dir}"/>
-      <javac srcdir="${src.dir}" destdir="${bin.dir}" classpath="${lib.dir}/java-cup-11a-runtime.jar" debug="on"/>
+      <javac destdir="${bin.dir}" classpath="${lib.dir}/java-cup-11a-runtime.jar" debug="on"/>
     </target>
     
   <!-- =================================
@@ -45,7 +44,9 @@ Lionel
   -->  
   <target name="lexer">
     <taskdef name="jflex" classname="JFlex.anttask.JFlexTask">
-      <classpath location="${JFlexLib}/JFlex.jar"/></taskdef><jflex file="Lexer.jflex" destdir="${src.dir}"/>
+      <classpath location="${JFlexLib}/JFlex.jar"/>
+    </taskdef>
+    <jflex file="Lexer.jflex" destdir="."/>
   </target>
   
   <!-- ================================= 
@@ -56,7 +57,7 @@ Lionel
     <taskdef name="cup" classname="java_cup.anttask.CUPTask">
       <classpath location="${CUPLib}/java-cup-11a.jar"/>
     </taskdef>
-    <cup srcfile="projet.cup" destdir="${src.dir}" parser="Parser" symbols="SymbolParser" dump_grammar="true"/>
+    <cup srcfile="Parser.cup" destdir="." parser="Parser" symbols="ClassSymbol" dump_grammar="true"/>
   </target>
   
   <!-- ================================= 

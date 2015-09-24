@@ -6,7 +6,9 @@ import IdType.java;
 %class Lexer
 %line
 %column
+%cupsym ClassSymbol
 %cup
+
 
 %state COMMENT
 
@@ -24,19 +26,26 @@ private Symbol symbol (int type, Object value) {
 %}
 
 fonction = [a-zA-Z][a-zA-Z1-9_\-]
+caractere = "0x"[0-9][0-9A-Fa-f]
 
 %%
 
+//Mots clefs 
 
-"integer" { return symbol(ClassSymbol.TYPE,IdType.INTEGER); }
+"integer" { return symbol(ClassSymbol.TYPE , IdType.INTEGER); }
 "character" { return symbol(ClassSymbol.TYPE,IdType.CHARACTER); }
 "float" { return symbol(ClassSymbol.TYPE,IdType.FLOAT); }
 "boolean" { return symbol(ClassSymbol.TYPE,IdType.BOOLEAN); }
 "string" { return symbol(ClassSymbol.TYPE,IdType.STRING); }
-
-"/*" { yybegin(COMMENT); }
-"/**" { yybegin(COMMENT); }
-"*/" { yybegin(YYINITIAL); }
-"**/" { yybegin(YYINITIAL); }
-
+"list of " { return symbol(ClassSymbol.TYPE,IdType.LISTOF); }
+ 
 "procedure" { return symbol(ClassSymbol.PROCEDURE); }
+
+
+
+//commentaires
+
+<YYINITIAL>"/*" { yybegin(COMMENT); }
+<YYINITIAL>"/**" { yybegin(COMMENT); }
+<COMMENT>"*/" { yybegin(YYINITIAL); }
+<COMMENT>"**/" { yybegin(YYINITIAL); }

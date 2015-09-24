@@ -6,5 +6,6 @@ public class IdType {
   public static final int FLOAT = 3;
   public static final int BOOLEAN = 4;
   public static final int STRING = 5;
+  public static final int LISTOF = 6;
 
 }
