@@ -54,6 +54,6 @@ virgule_flottante = entier('.'entier)?puissance|'.'entier.puissance
 
 // caracteres echappements entre guillemets
 
-<YYINITIAL>'"' { yybegin(COMMENT); }
+<YYINITIAL>'"' { yybegin(STRING); }
 
-<COMMENT>'"' { yybegin(YYINITIAL); }
+<STRING>'"' { yybegin(YYINITIAL); }
