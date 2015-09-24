@@ -23,7 +23,12 @@ private Symbol symbol (int type, Object value) {
 
 %}
 
+entier = [0-9]+
+puissance = ('e'[0-9]+)?
+
 fonction = [a-zA-Z][a-zA-Z1-9_\-]
+virgule_flottante = entier('.'entier)?puissance|'.'entier.puissance
+
 
 %%
 
