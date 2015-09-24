@@ -45,3 +45,12 @@ virgule_flottante = entier('.'entier)?puissance|'.'entier.puissance
 "**/" { yybegin(YYINITIAL); }
 
 "procedure" { return symbol(ClassSymbol.PROCEDURE); }
+
+// caracteres echappements entre guillemets
+
+<INITIAL> "\"" { yybegin(COMMENT); }
+[\t|\n|\r|\r\n\"] {}
+<COMMENT> "\"" { yybegin(YYINITIAL); }
+
+
+
