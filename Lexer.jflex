@@ -11,6 +11,7 @@ import IdType.java;
 
 
 %state COMMENT
+%state STRING
 
 %{
 
