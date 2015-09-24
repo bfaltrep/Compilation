@@ -25,8 +25,12 @@ private Symbol symbol (int type, Object value) {
 
 %}
 
+entier = [0-9]+
+puissance = ('e'[0-9]+)?
+
 fonction = [a-zA-Z][a-zA-Z1-9_\-]
 caractere = "0x"[0-9][0-9A-Fa-f]
+virgule_flottante = entier('.'entier)?puissance|'.'entier.puissance
 
 %%
 
@@ -41,11 +45,15 @@ caractere = "0x"[0-9][0-9A-Fa-f]
  
 "procedure" { return symbol(ClassSymbol.PROCEDURE); }
 
-
-
 //commentaires
 
 <YYINITIAL>"/*" { yybegin(COMMENT); }
 <YYINITIAL>"/**" { yybegin(COMMENT); }
 <COMMENT>"*/" { yybegin(YYINITIAL); }
 <COMMENT>"**/" { yybegin(YYINITIAL); }
+
+// caracteres echappements entre guillemets
+
+<YYINITIAL>'"' { yybegin(COMMENT); }
+
+<COMMENT>'"' { yybegin(YYINITIAL); }

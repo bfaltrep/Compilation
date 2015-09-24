@@ -66,7 +66,10 @@ Lionel
   -->
   <target name="clean" description="supprimer les fichiers générés durant la compilation">
       	<delete dir="bin"/>
-      	<delete dir="Output.txt"/>
+      	<delete file="Output.txt"/>
+        <delete file="ClassSymbol.java"/>
+        <delete file="Lexer.java"/>
+        <delete file="Parser.java"/>
   </target>
   
     <!-- ================================= 
