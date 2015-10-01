@@ -56,55 +56,55 @@ whitespace = [ \t\v\n\f]
 
 //Symboles
 
-";"				{ return symbol(ClassSymbol.LANGAGESYMBOLES, LangageSymboles.POINT_VIRGULE); }
-"{"				{ return symbol(ClassSymbol.LANGAGESYMBOLES, LangageSymboles.ACCOLADE_OUVRANTE); }
-"}"				{ return symbol(ClassSymbol.LANGAGESYMBOLES, LangageSymboles.ACCOLADE_FERMANTE); }
-","				{ return symbol(ClassSymbol.LANGAGESYMBOLES, LangageSymboles.VIRGULE);}
-":"				{ return symbol(ClassSymbol.LANGAGESYMBOLES, LangageSymboles.DEUX_POINT);}
-"="				{ return symbol(ClassSymbol.LANGAGESYMBOLES, LangageSymboles.EGAL);}
-"("				{ return symbol(ClassSymbol.LANGAGESYMBOLES, LangageSymboles.PARENTHESE_OUVRANTE);}
-")"				{ return symbol(ClassSymbol.LANGAGESYMBOLES, LangageSymboles.PARENTHESE_FERMANTE);}
-"["				{ return symbol(ClassSymbol.LANGAGESYMBOLES, LangageSymboles.CROCHET_OUVRANT); }
-"]"				{ return symbol(ClassSymbol.LANGAGESYMBOLES, LangageSymboles.CROCHET_FERMANT); }
-"."				{ return symbol(ClassSymbol.LANGAGESYMBOLES, LangageSymboles.POINT); }
-"&"				{ return symbol(ClassSymbol.LANGAGESYMBOLES, LangageSymboles.ESPERLUETTTE); }
-"!"				{ return symbol(ClassSymbol.LANGAGESYMBOLES, LangageSymboles.EXCLAMATION); }
-"~"				{ return symbol(ClassSymbol.LANGAGESYMBOLES, LangageSymboles.TILDE); }
-"-"				{ return symbol(ClassSymbol.LANGAGESYMBOLES, LangageSymboles.CADRATIN); }
-"+"				{ return symbol(ClassSymbol.LANGAGESYMBOLES, LangageSymboles.PLUS); }
-"*"				{ return symbol(ClassSymbol.LANGAGESYMBOLES, LangageSymboles.ETOILE); }
-"/"				{ return symbol(ClassSymbol.LANGAGESYMBOLES, LangageSymboles.BARRE_OBLIQUE); }
-"%"				{ return symbol(ClassSymbol.LANGAGESYMBOLES, LangageSymboles.POURCENT); }
-"<"				{ return symbol(ClassSymbol.LANGAGESYMBOLES, LangageSymboles.CHEVRON_INFERIEUR); }
-">"				{ return symbol(ClassSymbol.LANGAGESYMBOLES, LangageSymboles.CHEVRON_SUPERIEUR); }
-"^"				{ return symbol(ClassSymbol.LANGAGESYMBOLES, LangageSymboles.CIRCONFLEXE); }
-"|"				{ return symbol(ClassSymbol.LANGAGESYMBOLES, LangageSymboles.PIPE); }
-"?"				{ return symbol(ClassSymbol.LANGAGESYMBOLES, LangageSymboles.INTERROGATION); }
+";"				{ return symbol(POINT_VIRGULE); }
+"{"				{ return symbol(ACCOLADE_OUVRANTE); }
+"}"				{ return symbol(ACCOLADE_FERMANTE); }
+","				{ return symbol(VIRGULE);}
+":"				{ return symbol(DEUX_POINT);}
+"="				{ return symbol(EGAL);}
+"("				{ return symbol(PARENTHESE_OUVRANTE);}
+")"				{ return symbol(PARENTHESE_FERMANTE);}
+"["				{ return symbol(CROCHET_OUVRANT); }
+"]"				{ return symbol(CROCHET_FERMANT); }
+"."				{ return symbol(POINT); }
+"&"				{ return symbol(ESPERLUETTTE); }
+"!"				{ return symbol(EXCLAMATION); }
+"~"				{ return symbol(TILDE); }
+"-"				{ return symbol(CADRATIN); }
+"+"				{ return symbol(PLUS); }
+"*"				{ return symbol(ETOILE); }
+"/"				{ return symbol(BARRE_OBLIQUE); }
+"%"				{ return symbol(POURCENT); }
+"<"				{ return symbol(CHEVRON_INFERIEUR); }
+">"				{ return symbol(CHEVRON_SUPERIEUR); }
+"^"				{ return symbol(CIRCONFLEXE); }
+"|"				{ return symbol(PIPE); }
+"?"				{ return symbol(INTERROGATION); }
 
 //Opérateurs
 
-"..."				{ return symbol(ClassSymbol.OPERATORS, Operators.ELLIPSIS); }
-">>="				{ return symbol(ClassSymbol.OPERATORS, Operators.RIGHT_ASSIGN); }
-"<<="				{ return symbol(ClassSymbol.OPERATORS, Operators.LEFT_ASSIGN); }
-"+="				{ return symbol(ClassSymbol.OPERATORS, Operators.ADD_ASSIGN); }
-"-="				{ return symbol(ClassSymbol.OPERATORS, Operators.SUB_ASSIGN); }
-"*="				{ return symbol(ClassSymbol.OPERATORS, Operators.MUL_ASSIGN); }
-"/="				{ return symbol(ClassSymbol.OPERATORS, Operators.DIV_ASSIGN); }
-"%="				{ return symbol(ClassSymbol.OPERATORS, Operators.MOD_ASSIGN); }
-"&="				{ return symbol(ClassSymbol.OPERATORS, Operators.AND_ASSIGN); }
-"^="				{ return symbol(ClassSymbol.OPERATORS, Operators.XOR_ASSIGN); }
-"|="				{ return symbol(ClassSymbol.OPERATORS, Operators.OR_ASSIGN); }
-">>"				{ return symbol(ClassSymbol.OPERATORS, Operators.RIGHT_OP); }
-"<<"				{ return symbol(ClassSymbol.OPERATORS, Operators.LEFT_OP); }
-"++"				{ return symbol(ClassSymbol.OPERATORS, Operators.INC_OP); }
-"--"				{ return symbol(ClassSymbol.OPERATORS, Operators.DEC_OP); }
-"->"				{ return symbol(ClassSymbol.OPERATORS, Operators.PTR_OP); }
-"&&"				{ return symbol(ClassSymbol.OPERATORS, Operators.AND_OP); }
-"||"				{ return symbol(ClassSymbol.OPERATORS, Operators.OR_OP); }
-"<="				{ return symbol(ClassSymbol.OPERATORS, Operators.LE_OP); }
-">="				{ return symbol(ClassSymbol.OPERATORS, Operators.GE_OP); }
-"=="				{ return symbol(ClassSymbol.OPERATORS, Operators.EQ_OP); }
-"!="				{ return symbol(ClassSymbol.OPERATORS, Operators.NE_OP); }
+"..."				{ return symbol(ELLIPSIS); }
+">>="				{ return symbol(RIGHT_ASSIGN); }
+"<<="				{ return symbol(LEFT_ASSIGN); }
+"+="				{ return symbol(ADD_ASSIGN); }
+"-="				{ return symbol(SUB_ASSIGN); }
+"*="				{ return symbol(MUL_ASSIGN); }
+"/="				{ return symbol(DIV_ASSIGN); }
+"%="				{ return symbol(MOD_ASSIGN); }
+"&="				{ return symbol(AND_ASSIGN); }
+"^="				{ return symbol(XOR_ASSIGN); }
+"|="				{ return symbol(OR_ASSIGN); }
+">>"				{ return symbol(RIGHT_OP); }
+"<<"				{ return symbol(LEFT_OP); }
+"++"				{ return symbol(INC_OP); }
+"--"				{ return symbol(DEC_OP); }
+"->"				{ return symbol(PTR_OP); }
+"&&"				{ return symbol(AND_OP); }
+"||"				{ return symbol(OR_OP); }
+"<="				{ return symbol(LE_OP); }
+">="				{ return symbol(GE_OP); }
+"=="				{ return symbol(EQ_OP); }
+"!="				{ return symbol(NE_OP); }
 
 //commentaires
 
