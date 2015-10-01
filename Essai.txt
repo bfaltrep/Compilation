@@ -1,1 +1,9 @@
- integer/*
+class tutu{
+	public char c;
+	public int tutu(int);
+
+	int tutu (int tamere){
+		syso(lol);
+	}
+
+}

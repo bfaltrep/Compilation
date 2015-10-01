@@ -4,16 +4,81 @@ import java.util.Vector;
 import java.io.*;
 
 terminal IdType TYPE;
-terminal PROCEDURE;
-terminal FONCTION;
-terminal Operators OPERATORS;
-terminal LangageSymboles LANGAGESYMBOLES;
+terminal FONCTION; //nom de fonction
 terminal STRING_LITERAL;
 
+//mots clefs
+terminal CLASS;
+terminal STATIC;
+terminal FUNCTION;
+terminal PROCEDURE;
+terminal RETURN;
+terminal FOR;
+terminal WHILE;
+terminal IF;
+terminal ELSE;
+terminal SWITCH;
+terminal CASE;
+
+//Symboles du langage 
+terminal POINT_VIRGULE;
+terminal ACCOLADE_OUVRANTE;
+terminal ACCOLADE_FERMANTE;
+terminal VIRGULE;
+terminal DEUX_POINT;
+terminal EGAL;
+terminal PARENTHESE_OUVRANTE;
+terminal PARENTHESE_FERMANTE;
+terminal CROCHET_OUVRANT;
+terminal CROCHET_FERMANT;
+terminal POINT;
+terminal ESPERLUETTTE;
+terminal EXCLAMATION;
+terminal TILDE;
+terminal CADRATIN;
+terminal PLUS;
+terminal ETOILE;
+terminal BARRE_OBLIQUE;
+terminal POURCENT;
+terminal CHEVRON_INFERIEUR;
+terminal CHEVRON_SUPERIEUR;
+terminal CIRCONFLEXE;
+terminal PIPE;
+terminal INTERROGATION;
+
+//Operateurs
+terminal ELLIPSIS,;
+terminal RIGHT_ASSIGN;
+terminal LEFT_ASSIGN;
+terminal ADD_ASSIGN;
+terminal SUB_ASSIGN;
+terminal MUL_ASSIGN;
+terminal DIV_ASSIGN;
+terminal MOD_ASSIGN;
+terminal AND_ASSIGN;
+terminal XOR_ASSIGN;
+terminal OR_ASSIGN;
+terminal RIGHT_OP;
+terminal LEFT_OP;
+terminal INC_OP;
+terminal DEC_OP;
+terminal PTR_OP;
+terminal AND_OP;
+terminal OR_OP;
+terminal LE_OP;
+terminal GE_OP;
+terminal EQ_OP;
+terminal NE_OP;
+
 non terminal axiom;
+non terminal declaration_class;
+non terminal 
 
 
 start with axiom;
+
+axiom ::=	CLASS FONCTION ACCOLADE_OUVRANTE ... ACCOLADE_FERMANTE
+
 
 
 
