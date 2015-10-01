@@ -7,6 +7,7 @@ terminal IdType TYPE;
 terminal FONCTION; //nom de fonction
 terminal STRING_LITERAL;
 terminal CARACTERE;
+terminal VIRGULE_FLOTTANTE;
 
 //mots clefs
 terminal CLASS;
