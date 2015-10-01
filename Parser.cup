@@ -77,7 +77,9 @@ non terminal
 
 start with axiom;
 
-axiom ::=	CLASS FONCTION ACCOLADE_OUVRANTE ... ACCOLADE_FERMANTE
+axiom ::= declaration_class
+
+declaration_class ::= CLASS FONCTION ACCOLADE_OUVRANTE ... ACCOLADE_FERMANTE
 
 
 
