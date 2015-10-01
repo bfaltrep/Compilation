@@ -1,0 +1,14 @@
+public enum MotClefs{
+	CLASS,
+	STATIC,
+	FUNCTION,
+	PROCEDURE,
+	RETURN,
+	FOR,
+	WHILE, 
+	IF, 
+	ELSE,
+	SWITCH, 
+	CASE
+
+}
