@@ -46,10 +46,17 @@ whitespace = [ \t\v\n\f]
 "list of " { return symbol(ClassSymbol.TYPE, IdType.LISTOF); }
  
 
-"class"
-"static"
-"function"
-"procedure" { return symbol(ClassSymbol.PROCEDURE); }
+"class" { return symbol(ClassSymbol.MOTCLEFS, MotClefs.CLASS); }
+"static" { return symbol(ClassSymbol.MOTCLEFS, MotClefs.STATIC); }
+"function" { return symbol(ClassSymbol.MOTCLEFS, MotClefs.FUNCTION); }
+"procedure" { return symbol(ClassSymbol.MOTCLEFS, MotClefs.PROCEDURE); }
+"return" { return symbol(ClassSymbol.MOTCLEFS, MotClefs.RETURN); }
+"for" { return symbol(ClassSymbol.MOTCLEFS, MotClefs.); }
+"while" { return symbol(ClassSymbol.MOTCLEFS, MotClefs.PROCEDURE); }
+"if" { return symbol(ClassSymbol.MOTCLEFS, MotClefs.PROCEDURE); }
+"else" { return symbol(ClassSymbol.MOTCLEFS, MotClefs.PROCEDURE); }
+"switch" { return symbol(ClassSymbol.MOTCLEFS, MotClefs.PROCEDURE); }
+"case" { return symbol(ClassSymbol.MOTCLEFS, MotClefs.PROCEDURE); }
 
 {fonction} { buffer.append(yytext()); return symbol(ClassSymbol.FONCTION, buffer);}
 {whitespace} {}
