@@ -6,6 +6,7 @@ import java.io.*;
 terminal IdType TYPE;
 terminal FONCTION; //nom de fonction
 terminal STRING_LITERAL;
+terminal CARACTERE;
 
 //mots clefs
 terminal CLASS;

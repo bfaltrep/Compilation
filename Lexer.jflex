@@ -32,7 +32,7 @@ virgule_flottante = entier('.'entier)?puissance|'.'entier.puissance
 
 fonction = [a-zA-Z][a-zA-Z1-9_\-]
 
-caractere = "0x"[0-9][0-9A-Fa-f]
+caractere = "0x"[0-9][0-9A-Fa-f]|'\''[[.]?{whitespace}\0[EOF]'\''
 whitespace = [ \t\v\n\f]
 %%
 
@@ -58,19 +58,22 @@ whitespace = [ \t\v\n\f]
 "switch" { return symbol(ClassSymbol.SWITCH); }
 "case" { return symbol(ClassSymbol.CASE); }
 
-{fonction} { buffer.append(yytext()); return symbol(ClassSymbol.FONCTION, buffer);}
+{fonction} { buffer.append(yytext()); return symbol(ClassSymbol.FONCTION, buffer); }
+{caractere} { return symbol(ClassSymbol.CARACTERE, yytext());}
+{entier} { return symbol(ClassSymbol.ENTIER, Character.getNumericValue(yytext()));}
 {whitespace} {}
+
 
 //Symboles
 
 ";"				{ return symbol(ClassSymbol.POINT_VIRGULE); }
 "{"				{ return symbol(ClassSymbol.ACCOLADE_OUVRANTE); }
 "}"				{ return symbol(ClassSymbol.ACCOLADE_FERMANTE); }
-","				{ return symbol(ClassSymbol.VIRGULE);}
-":"				{ return symbol(ClassSymbol.DEUX_POINT);}
-"="				{ return symbol(ClassSymbol.EGAL);}
-"("				{ return symbol(ClassSymbol.PARENTHESE_OUVRANTE);}
-")"				{ return symbol(ClassSymbol.PARENTHESE_FERMANTE);}
+","				{ return symbol(ClassSymbol.VIRGULE); }
+":"				{ return symbol(ClassSymbol.DEUX_POINT); }
+"="				{ return symbol(ClassSymbol.EGAL); }
+"("				{ return symbol(ClassSymbol.PARENTHESE_OUVRANTE); }
+")"				{ return symbol(ClassSymbol.PARENTHESE_FERMANTE); }
 "["				{ return symbol(ClassSymbol.CROCHET_OUVRANT); }
 "]"				{ return symbol(ClassSymbol.CROCHET_FERMANT); }
 "."				{ return symbol(ClassSymbol.POINT); }
@@ -123,6 +126,6 @@ whitespace = [ \t\v\n\f]
 
 // caracteres echappements entre guillemets
 
-<YYINITIAL>'\"' { yybegin(STRING); return symbol(ClassSymbol.STRING_LITERAL);}
+<YYINITIAL>'\"' { yybegin(STRING); return symbol(ClassSymbol.STRING_LITERAL); }
 
 <STRING>'\"' { yybegin(YYINITIAL); }

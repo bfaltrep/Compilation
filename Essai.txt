@@ -1,9 +1,20 @@
 class tutu{
-	public char c;
-	public int tutu(int);
+	static id: integer;
+	nom: string;
+	age: integer;
 
-	int tutu (int tamere){
-		syso(lol);
+	//commentaire tralala
+	fiche(){
+		nom := "";
+		age := 0;
+	}
+
+	~fiche(){
+
+	}
+
+	function getNom(): string{
+		return nom;
 	}
 
 }
