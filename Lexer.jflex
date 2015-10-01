@@ -58,6 +58,7 @@ whitespace = [ \t\v\n\f]
 "switch" { return symbol(ClassSymbol.SWITCH); }
 "case" { return symbol(ClassSymbol.CASE); }
 
+{virgule_flottante} {return symbol(ClassSymbol.VIRGULE_FLOTTANTE);}
 {fonction} { buffer.append(yytext()); return symbol(ClassSymbol.FONCTION, buffer);}
 {whitespace} {}
 
