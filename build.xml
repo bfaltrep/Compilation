@@ -12,8 +12,8 @@ Lionel
   <property name="CUPLib" location="lib"/>
   <property name="lib.dir" location="lib"/>
   <property name="bin.dir" location="bin"/>
-  <property name="parser.dir" location="parser"/>
-  <property name="lexer.dir" location="lexer"/>
+<!--   <property name="parser.dir" location="parser"/>
+  <property name="lexer.dir" location="lexer"/> -->
   
   <description>
     compilation du projet Lexer
@@ -35,7 +35,7 @@ Lionel
     -->
     <target name="projet" depends="parser, lexer" description="compilation du projet">
       <mkdir dir="${bin.dir}"/>
-      <javac destdir="${bin.dir}" classpath="${lib.dir}/java-cup-11a-runtime.jar" debug="on"/>
+      <javac destdir="${bin.dir}" srcdir="." classpath="${lib.dir}/java-cup-11a-runtime.jar" debug="on"/>
     </target>
     
   <!-- =================================
@@ -83,7 +83,6 @@ Lionel
   	<exec executable="cat" > 
   	    <arg value="output.txt"/>
   	</exec>
-  	
   	
   	<echo message="Fin du test." />
   </target>

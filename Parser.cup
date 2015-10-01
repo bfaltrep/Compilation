@@ -3,13 +3,23 @@ import java_cup.runtime.*;
 import java.util.Vector;
 import java.io.*;
 
-terminal int TYPE;
-terminal int PROCEDURE;
+terminal IdType TYPE;
+terminal PROCEDURE;
+terminal FONCTION;
+terminal Operators OPERATORS;
+terminal LangageSymboles LANGAGESYMBOLES;
+terminal STRING_LITERAL;
+
 non terminal axiom;
 
 
 start with axiom;
 
-axiom ::=   TYPE 
-			{: System.out.printf("Le type est ..."); :} 
+
+
+
+axiom ::=   TYPE:t1 
+			{: System.out.println("type "+t1); :} 
+		|	PROCEDURE 
+			{: System.out.println("procedure"); :}
 			;
