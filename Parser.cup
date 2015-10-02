@@ -74,14 +74,33 @@ terminal NE_OP;
 
 non terminal axiom;
 non terminal declaration_class;
-non terminal 
+non terminal list_instance;
+non terminal instance;
+
+non terminal declaration_instance;
+non terminal definition_instance;
 
 
 start with axiom;
 
 axiom ::= declaration_class
 
-declaration_class ::= CLASS FONCTION ACCOLADE_OUVRANTE ... ACCOLADE_FERMANTE
+declaration_class ::= CLASS FONCTION ACCOLADE_OUVRANTE list_instance ACCOLADE_FERMANTE
+
+list_instance ::= instance
+				| instance list_instance
+				|
+				;
+
+instance ::=  declaration_instance
+			| definition_instance
+			;
+
+declaration_instance ::= FONCTION DEUX_POINT TYPE POINT_VIRGULE
+						| STATIC FONCTION DEUX_POINT TYPE POINT_VIRGULE
+
+definition_instance ::=
+
 
 
 
