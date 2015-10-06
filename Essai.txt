@@ -1,4 +1,10 @@
 class tutu{
+	type client = structure {
+		nom: string;
+		date_de_naissance: integer;
+	};
+
+	monTableau: list of client;
 	static id: integer;
 	nom: string;
 	age: integer;
@@ -10,7 +16,11 @@ class tutu{
 	}
 
 	~fiche(){
-
+		t: list of integer;
+		t = [1, 3];
+		foreach i  in [0, 1, 2, 3, 4]{
+			afficher(t[i]);
+		}
 	}
 
 	function getNom(): string{

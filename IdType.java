@@ -4,6 +4,4 @@ public enum IdType {
  FLOAT, 
  BOOLEAN, 
  STRING, 
- VOID,
- LISTOF
 }

@@ -3,24 +3,34 @@ import java_cup.runtime.*;
 import java.util.Vector;
 import java.io.*;
 
-terminal IdType TYPE;
-terminal FONCTION; //nom de fonction
+terminal IdType TYPESIMPLE;
 terminal STRING_LITERAL;
 terminal CARACTERE;
 terminal VIRGULE_FLOTTANTE;
 
+terminal FONCTION; //nom de fonction
+terminal CLASSE; //nom de la classe
+terminal VARIABLE;
+
 //mots clefs
-terminal CLASS;
+terminal LISTOF;
 terminal STATIC;
+terminal STRUCTURE;
+
+terminal CLASS;
 terminal FUNCTION;
 terminal PROCEDURE;
+
+terminal BREAK;
+terminal STOP;
 terminal RETURN;
-terminal FOR;
+
+terminal FOREACH;
+terminal IN;
 terminal WHILE;
+terminal REPEAT;
 terminal IF;
 terminal ELSE;
-terminal SWITCH;
-terminal CASE;
 
 //Symboles du langage 
 terminal POINT_VIRGULE;
@@ -50,8 +60,6 @@ terminal INTERROGATION;
 
 //Operateurs
 terminal ELLIPSIS,;
-terminal RIGHT_ASSIGN;
-terminal LEFT_ASSIGN;
 terminal ADD_ASSIGN;
 terminal SUB_ASSIGN;
 terminal MUL_ASSIGN;
@@ -80,12 +88,28 @@ non terminal instance;
 non terminal declaration_instance;
 non terminal definition_instance;
 
+non terminal declaration_fonction;
+non terminal declaration_procedure;
+non terminal declaration_variable;
+non terminal declaration_structure;
+
+non terminal definition_constructeur;
+non terminal definition_destructeur;
+non terminal definition_fonction;
+non terminal definition_procedure;
+non terminal definition_variable;
+non terminal definition_structure;
+
+non terminal type;
+non terminal type_complexe;
 
 start with axiom;
 
 axiom ::= declaration_class
+		|
+		;
 
-declaration_class ::= CLASS FONCTION ACCOLADE_OUVRANTE list_instance ACCOLADE_FERMANTE
+declaration_class ::= CLASS CLASSE ACCOLADE_OUVRANTE list_instance ACCOLADE_FERMANTE
 
 list_instance ::= instance
 				| instance list_instance
@@ -96,17 +120,66 @@ instance ::=  declaration_instance
 			| definition_instance
 			;
 
-declaration_instance ::= FONCTION DEUX_POINT TYPE POINT_VIRGULE
-						| STATIC FONCTION DEUX_POINT TYPE POINT_VIRGULE
+declaration_instance ::= declaration_fonction
+						| declaration_procedure
+						| declaration_variable
+						| declaration_structure
+						;
 
-definition_instance ::=
+declaration_fonction ::= FONCTION DEUX_POINT type POINT_VIRGULE
+						;
+
+declaration_procedure ::= PROCEDURE FONCTION DEUX_POINT type POINT_VIRGULE
+						;
+
+list_declaration_variable ::= declaration_variable
+							| declaration_variable list_declaration_variable
+							;
+
+declaration_variable ::= VARIABLE DEUX_POINT type POINT_VIRGULE
+						| VARIABLE DEUX_POINT LISTOF STRUCTURE ACCOLADE_OUVRANTE list_declaration_variable ACCOLADE_FERMANTE POINT_VIRGULE
+						;
+
+declaration_structure ::= 
+
+
+definition_instance ::= definition_constructeur
+					| definition_destructeur
+					| definition_fonction
+					| definition_procedure
+					| definition_variable
+					| definition_structure
+					;
+
+
+definition_constructeur ::= 
+
+definition_destructeur ::=
+
+definition_fonction ::=
+
+definition_procedure ::=
+
+definition_variable ::=
+
+definition_structure ::=
 
 
 
 
+type ::= TYPESIMPLE
+		| type_complexe
+		;
+
+type_complexe ::= LISTOF type 
+				| CIRCONFLEXE type
+				| STRUCTURE ACCOLADE_OUVRANTE list_declaration_variable ACCOLADE_FERMANTE
+				| CLASS ACCOLADE_OUVRANTE list_instance ACCOLADE_FERMANTE
+				;
 
 
-axiom ::=   TYPE:t1 
+
+axiom ::=   TYPESIMPLE:t1 
 			{: System.out.println("type "+t1); :} 
 		|	PROCEDURE 
 			{: System.out.println("procedure"); :}

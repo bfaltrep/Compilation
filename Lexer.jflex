@@ -30,36 +30,46 @@ entier = [0-9]+
 puissance = ('e'[0-9]+)?
 virgule_flottante = entier('.'entier)?puissance|'.'entier.puissance
 
-fonction = [a-zA-Z][a-zA-Z1-9_\-]
+classe = [A-Z][a-zA-Z0-9_\-]*
+fonction = [a-zA-Z][a-zA-Z0-9_\-]*
+variable = [a-zA-Z0-9_\-]*
 
-caractere = "0x"[0-9][0-9A-Fa-f]|'\''[[.]?{whitespace}\0[EOF]'\''
+caractere = "0x"[0-9][0-9A-Fa-f]|'\''[.]?'\''
 whitespace = [ \t\v\n\f]
 %%
 
 //Mots clefs 
 
-"integer" { return symbol(ClassSymbol.TYPE , IdType.INTEGER); }
-"character" { return symbol(ClassSymbol.TYPE, IdType.CHARACTER); }
-"float" { return symbol(ClassSymbol.TYPE, IdType.FLOAT); }
-"boolean" { return symbol(ClassSymbol.TYPE, IdType.BOOLEAN); }
-"string" { return symbol(ClassSymbol.TYPE, IdType.STRING); }
-"list of " { return symbol(ClassSymbol.TYPE, IdType.LISTOF); }
- 
+"integer" { return symbol(ClassSymbol.TYPESIMPLE , IdType.INTEGER); }
+"character" { return symbol(ClassSymbol.TYPESIMPLE, IdType.CHARACTER); }
+"float" { return symbol(ClassSymbol.TYPESIMPLE, IdType.FLOAT); }
+"boolean" { return symbol(ClassSymbol.TYPESIMPLE, IdType.BOOLEAN); }
+"string" { return symbol(ClassSymbol.TYPESIMPLE, IdType.STRING); }
+
+"list of " { return symbol(ClassSymbol.LISTOF); }
+"static" { return symbol(ClassSymbol.STATIC); }
+"structure" { return symbol(ClassSymbol.STRUCTURE); }
 
 "class" { return symbol(ClassSymbol.CLASS); }
-"static" { return symbol(ClassSymbol.STATIC); }
 "function" { return symbol(ClassSymbol.FUNCTION); }
 "procedure" { return symbol(ClassSymbol.PROCEDURE); }
+
+"break" { return symbol(ClassSymbol.BREAK); }
+"stop" { return symbol(ClassSymbol.STOP); }
 "return" { return symbol(ClassSymbol.RETURN); }
-"for" { return symbol(ClassSymbol.FOR); }
+
+"foreach" { return symbol(ClassSymbol.FOREACH); }
+"in" { return symbol(ClassSymbol.IN); }
 "while" { return symbol(ClassSymbol.WHILE); }
+"repeat" { return symbol(ClassSymbol.REPEAT); }
 "if" { return symbol(ClassSymbol.IF); }
 "else" { return symbol(ClassSymbol.ELSE); }
-"switch" { return symbol(ClassSymbol.SWITCH); }
-"case" { return symbol(ClassSymbol.CASE); }
 
 
+{classe} { buffer.append(yytext()); return symbol(ClassSymbol.CLASSE, buffer);}
 {fonction} { buffer.append(yytext()); return symbol(ClassSymbol.FONCTION, buffer); }
+{variable} { buffer.append(yytext()); return symbol(ClassSymbol.VARIABLE, buffer); }
+
 {caractere} { return symbol(ClassSymbol.CARACTERE, yytext());}
 {entier} { return symbol(ClassSymbol.ENTIER, Character.getNumericValue(yytext()));}
 {virgule_flottante} {return symbol(ClassSymbol.VIRGULE_FLOTTANTE);}
@@ -96,8 +106,6 @@ whitespace = [ \t\v\n\f]
 //Opérateurs
 
 "..."				{ return symbol(ClassSymbol.ELLIPSIS); }
-">>="				{ return symbol(ClassSymbol.RIGHT_ASSIGN); }
-"<<="				{ return symbol(ClassSymbol.LEFT_ASSIGN); }
 "+="				{ return symbol(ClassSymbol.ADD_ASSIGN); }
 "-="				{ return symbol(ClassSymbol.SUB_ASSIGN); }
 "*="				{ return symbol(ClassSymbol.MUL_ASSIGN); }
