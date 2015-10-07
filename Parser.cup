@@ -8,9 +8,7 @@ terminal STRING_LITERAL;
 terminal CARACTERE;
 terminal VIRGULE_FLOTTANTE;
 
-terminal FONCTION; //nom de fonction
-terminal CLASSE; //nom de la classe
-terminal VARIABLE;
+terminal MOT;
 
 //mots clefs
 terminal LISTOF;
@@ -102,6 +100,9 @@ non terminal definition_structure;
 
 non terminal type;
 non terminal type_complexe;
+non terminal variable;
+non terminal fonction;
+non terminal classe;
 
 start with axiom;
 
@@ -109,7 +110,7 @@ axiom ::= declaration_class
 		|
 		;
 
-declaration_class ::= CLASS CLASSE ACCOLADE_OUVRANTE list_instance ACCOLADE_FERMANTE
+declaration_class ::= CLASS classe ACCOLADE_OUVRANTE list_instance ACCOLADE_FERMANTE
 
 list_instance ::= instance
 				| instance list_instance
@@ -136,8 +137,8 @@ list_declaration_variable ::= declaration_variable
 							| declaration_variable list_declaration_variable
 							;
 
-declaration_variable ::= VARIABLE DEUX_POINT type POINT_VIRGULE
-						| VARIABLE DEUX_POINT LISTOF STRUCTURE ACCOLADE_OUVRANTE list_declaration_variable ACCOLADE_FERMANTE POINT_VIRGULE
+declaration_variable ::= variable DEUX_POINT type POINT_VIRGULE
+						| variable DEUX_POINT LISTOF STRUCTURE ACCOLADE_OUVRANTE list_declaration_variable ACCOLADE_FERMANTE POINT_VIRGULE
 						;
 
 declaration_structure ::= 
@@ -158,14 +159,18 @@ definition_destructeur ::=
 
 definition_fonction ::=
 
-definition_procedure ::=
+definition_procedure ::= PROCEDURE FUNCTION 
 
 definition_variable ::=
 
 definition_structure ::=
 
 
+variable ::=
 
+classe ::=
+
+fonction ::=
 
 type ::= TYPESIMPLE
 		| type_complexe

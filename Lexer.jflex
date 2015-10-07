@@ -30,9 +30,7 @@ entier = [0-9]+
 puissance = ('e'[0-9]+)?
 virgule_flottante = entier('.'entier)?puissance|'.'entier.puissance
 
-classe = [A-Z][a-zA-Z0-9_\-]*
-fonction = [a-zA-Z][a-zA-Z0-9_\-]*
-variable = [a-zA-Z0-9_\-]*
+mot = [a-zA-Z][a-zA-Z0-9_\-]*
 
 caractere = "0x"[0-9][0-9A-Fa-f]|'\''[.]?'\''
 whitespace = [ \t\v\n\f]
@@ -66,9 +64,7 @@ whitespace = [ \t\v\n\f]
 "else" { return symbol(ClassSymbol.ELSE); }
 
 
-{classe} { buffer.append(yytext()); return symbol(ClassSymbol.CLASSE, buffer);}
-{fonction} { buffer.append(yytext()); return symbol(ClassSymbol.FONCTION, buffer); }
-{variable} { buffer.append(yytext()); return symbol(ClassSymbol.VARIABLE, buffer); }
+{mot} { buffer.append(yytext()); return symbol(ClassSymbol.MOT, buffer);}
 
 {caractere} { return symbol(ClassSymbol.CARACTERE, yytext());}
 {entier} { return symbol(ClassSymbol.ENTIER, Character.getNumericValue(yytext()));}
