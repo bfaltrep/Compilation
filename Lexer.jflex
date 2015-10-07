@@ -44,9 +44,14 @@ whitespace = [ \t\v\n\f]
 "boolean" { return symbol(ClassSymbol.TYPESIMPLE, IdType.BOOLEAN); }
 "string" { return symbol(ClassSymbol.TYPESIMPLE, IdType.STRING); }
 
+"true" { return symbol(ClassSymbol.TRUE); }
+"false" { return symbol(ClassSymbol.FALSE); }
+"null" { return symbol(ClassSymbol.NULL); }
+
 "list of " { return symbol(ClassSymbol.LISTOF); }
 "static" { return symbol(ClassSymbol.STATIC); }
 "structure" { return symbol(ClassSymbol.STRUCTURE); }
+"type" { return symbol(ClassSymbol.TYPE); }
 
 "class" { return symbol(ClassSymbol.CLASS); }
 "function" { return symbol(ClassSymbol.FUNCTION); }
