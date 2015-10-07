@@ -100,9 +100,6 @@ non terminal definition_structure;
 
 non terminal type;
 non terminal type_complexe;
-non terminal variable;
-non terminal fonction;
-non terminal classe;
 
 start with axiom;
 
@@ -110,7 +107,7 @@ axiom ::= declaration_class
 		|
 		;
 
-declaration_class ::= CLASS classe ACCOLADE_OUVRANTE list_instance ACCOLADE_FERMANTE
+declaration_class ::= CLASS MOT ACCOLADE_OUVRANTE list_instance ACCOLADE_FERMANTE
 
 list_instance ::= instance
 				| instance list_instance
@@ -127,18 +124,19 @@ declaration_instance ::= declaration_fonction
 						| declaration_structure
 						;
 
-declaration_fonction ::= FONCTION DEUX_POINT type POINT_VIRGULE
+declaration_fonction ::= FUNCTION MOT PARENTHESE_OUVRANTE list_declaration_variable PARENTHESE_FERMANTE DEUX_POINT type POINT_VIRGULE
 						;
 
-declaration_procedure ::= PROCEDURE FONCTION DEUX_POINT type POINT_VIRGULE
+declaration_procedure ::= PROCEDURE MOT DEUX_POINT type POINT_VIRGULE
 						;
 
 list_declaration_variable ::= declaration_variable
-							| declaration_variable list_declaration_variable
+							| declaration_variable VIRGULE list_declaration_variable
+							|
 							;
 
-declaration_variable ::= variable DEUX_POINT type POINT_VIRGULE
-						| variable DEUX_POINT LISTOF STRUCTURE ACCOLADE_OUVRANTE list_declaration_variable ACCOLADE_FERMANTE POINT_VIRGULE
+declaration_variable ::= MOT DEUX_POINT type POINT_VIRGULE
+						| MOT DEUX_POINT LISTOF STRUCTURE ACCOLADE_OUVRANTE list_declaration_variable ACCOLADE_FERMANTE POINT_VIRGULE
 						;
 
 declaration_structure ::= 
@@ -159,18 +157,11 @@ definition_destructeur ::=
 
 definition_fonction ::=
 
-definition_procedure ::= PROCEDURE FUNCTION 
+definition_procedure ::= PROCEDURE mot  
 
 definition_variable ::=
 
 definition_structure ::=
-
-
-variable ::=
-
-classe ::=
-
-fonction ::=
 
 type ::= TYPESIMPLE
 		| type_complexe
