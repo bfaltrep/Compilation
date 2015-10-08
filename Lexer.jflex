@@ -72,7 +72,7 @@ whitespace = [ \t\v\n\f]
 {mot} { buffer.append(yytext()); return symbol(ClassSymbol.MOT, buffer);}
 
 {caractere} { return symbol(ClassSymbol.CARACTERE, yytext());}
-{entier} { return symbol(ClassSymbol.ENTIER, Character.getNumericValue(yytext()));}
+{entier} { return symbol(ClassSymbol.ENTIER, Integer.parseInt(yytext()));}
 {virgule_flottante} {return symbol(ClassSymbol.VIRGULE_FLOTTANTE);}
 {whitespace} {}
 

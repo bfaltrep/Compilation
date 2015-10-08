@@ -6,7 +6,11 @@ import java.io.*;
 terminal IdType TYPESIMPLE;
 terminal STRING_LITERAL;
 terminal CARACTERE;
+terminal ENTIER;
 terminal VIRGULE_FLOTTANTE;
+terminal TRUE;
+terminal FALSE;
+terminal NULL;
 
 terminal MOT;
 
@@ -14,6 +18,7 @@ terminal MOT;
 terminal LISTOF;
 terminal STATIC;
 terminal STRUCTURE;
+terminal TYPE;
 
 terminal CLASS;
 terminal FUNCTION;
@@ -57,7 +62,7 @@ terminal PIPE;
 terminal INTERROGATION;
 
 //Operateurs
-terminal ELLIPSIS,;
+terminal ELLIPSIS;
 terminal ADD_ASSIGN;
 terminal SUB_ASSIGN;
 terminal MUL_ASSIGN;
@@ -80,103 +85,160 @@ terminal NE_OP;
 
 non terminal axiom;
 non terminal declaration_class;
-non terminal list_instance;
-non terminal instance;
+non terminal list_intraclasse;
+non terminal intraclasse;
 
-non terminal declaration_instance;
-non terminal definition_instance;
+non terminal declaration_intraclasse;
+non terminal definitions_intraclasse;
 
 non terminal declaration_fonction;
 non terminal declaration_procedure;
 non terminal declaration_variable;
 non terminal declaration_structure;
+non terminal declaration_type;
+non terminal declaration_tableau;
 
 non terminal definition_constructeur;
 non terminal definition_destructeur;
 non terminal definition_fonction;
 non terminal definition_procedure;
-non terminal definition_variable;
 non terminal definition_structure;
+non terminal affectation_variable;
+non terminal affectation_tableau;
 
 non terminal type;
 non terminal type_complexe;
 
+non terminal condiboucle;
+non terminal list_declaration_argument;
+non terminal list_declaration_variable;
+non terminal declaration_argument;
+non terminal bloc;
+
+non terminal valeur;
+non terminal list_valeur;
+
 start with axiom;
 
+condiboucle ::= FOREACH
+ | IN
+ | WHILE
+ | REPEAT
+ | IF
+ | ELSE
+ ;
+
+
+
 axiom ::= declaration_class
-		|
-		;
+       |
+       ;
 
-declaration_class ::= CLASS MOT ACCOLADE_OUVRANTE list_instance ACCOLADE_FERMANTE
-
-list_instance ::= instance
-				| instance list_instance
-				|
-				;
-
-instance ::=  declaration_instance
-			| definition_instance
-			;
-
-declaration_instance ::= declaration_fonction
-						| declaration_procedure
-						| declaration_variable
-						| declaration_structure
-						;
-
-declaration_fonction ::= FUNCTION MOT PARENTHESE_OUVRANTE list_declaration_variable PARENTHESE_FERMANTE DEUX_POINT type POINT_VIRGULE
-						;
-
-declaration_procedure ::= PROCEDURE MOT DEUX_POINT type POINT_VIRGULE
-						;
-
-list_declaration_variable ::= declaration_variable
-							| declaration_variable VIRGULE list_declaration_variable
-							|
-							;
-
-declaration_variable ::= MOT DEUX_POINT type POINT_VIRGULE
-						| MOT DEUX_POINT LISTOF STRUCTURE ACCOLADE_OUVRANTE list_declaration_variable ACCOLADE_FERMANTE POINT_VIRGULE
-						;
-
-declaration_structure ::= 
-
-
-definition_instance ::= definition_constructeur
-					| definition_destructeur
-					| definition_fonction
-					| definition_procedure
-					| definition_variable
-					| definition_structure
+declaration_class ::= CLASS MOT ACCOLADE_OUVRANTE list_intraclasse ACCOLADE_FERMANTE {: System.out.println("finit."); :}
+					| CLASS MOT ACCOLADE_OUVRANTE ACCOLADE_FERMANTE {: System.out.println("finit."); :}
 					;
 
+list_intraclasse ::= list_intraclasse intraclasse
+            	   | intraclasse 
+                   ;
 
-definition_constructeur ::= 
+intraclasse ::=  declaration_intraclasse
+              | definitions_intraclasse
+              ;
 
-definition_destructeur ::=
+declaration_intraclasse ::= declaration_fonction
+                        | declaration_procedure
+                        | declaration_variable POINT_VIRGULE
+                        | declaration_type POINT_VIRGULE
+                        ;
 
-definition_fonction ::=
+declaration_fonction ::= FUNCTION MOT PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE DEUX_POINT type POINT_VIRGULE
+                       ;
 
-definition_procedure ::= PROCEDURE mot  
+declaration_procedure ::= PROCEDURE MOT DEUX_POINT type POINT_VIRGULE
+                        ;
 
-definition_variable ::=
+list_declaration_variable ::= declaration_variable
+                            | declaration_variable POINT_VIRGULE list_declaration_variable
+                            |
+                            ;
 
-definition_structure ::=
+list_declaration_argument ::= declaration_argument
+| declaration_argument VIRGULE list_declaration_argument
+|
+;
+
+declaration_variable ::= MOT DEUX_POINT type 
+                       ;
+
+declaration_type ::= TYPE MOT EGAL STRUCTURE ACCOLADE_OUVRANTE list_declaration_variable ACCOLADE_FERMANTE
+;
+
+
+definitions_intraclasse ::= definition_constructeur
+                                        | definition_destructeur
+                                        | definition_fonction
+                                        | definition_procedure
+                                        | affectation_variable
+                                        | definition_structure
+                                        ;
+
+
+definition_constructeur ::= MOT PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE ACCOLADE_OUVRANTE bloc ACCOLADE_FERMANTE 
+
+    ;
+
+
+definition_destructeur ::= TILDE MOT PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE ACCOLADE_OUVRANTE bloc ACCOLADE_FERMANTE
+;
+
+definition_fonction ::= FUNCTION MOT PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE DEUX_POINT type ACCOLADE_OUVRANTE bloc ACCOLADE_FERMANTE
+;
+
+definition_procedure ::= PROCEDURE MOT PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE ACCOLADE_OUVRANTE bloc ACCOLADE_FERMANTE
+;
+
+affectation_variable ::= MOT EGAL valeur POINT_VIRGULE
+| MOT DEUX_POINT EGAL valeur POINT_VIRGULE
+;
+
+bloc ::= declaration_variable
+    | affectation_variable
+    | condiboucle
+    | affectation_tableau
+    | RETURN POINT_VIRGULE
+    | RETURN MOT POINT_VIRGULE
+    ;
+
+
+
+declaration_tableau ::= CROCHET_OUVRANT list_valeur CROCHET_FERMANT POINT_VIRGULE
+;
+
+list_valeur ::= valeur VIRGULE list_valeur
+| valeur 
+| 
+;
+
+valeur ::= TRUE
+| FALSE
+| NULL
+| MOT
+| CARACTERE
+| ENTIER
+| VIRGULE_FLOTTANTE
+| STRING_LITERAL
+| declaration_tableau
+| type_complexe
+;
+
 
 type ::= TYPESIMPLE
-		| type_complexe
-		;
+                | type_complexe
+                ;
 
 type_complexe ::= LISTOF type 
-				| CIRCONFLEXE type
-				| STRUCTURE ACCOLADE_OUVRANTE list_declaration_variable ACCOLADE_FERMANTE
-				| CLASS ACCOLADE_OUVRANTE list_instance ACCOLADE_FERMANTE
-				;
-
-
-
-axiom ::=   TYPESIMPLE:t1 
-			{: System.out.println("type "+t1); :} 
-		|	PROCEDURE 
-			{: System.out.println("procedure"); :}
-			;
+                                | CIRCONFLEXE type
+                                | STRUCTURE ACCOLADE_OUVRANTE list_declaration_variable ACCOLADE_FERMANTE
+                                | CLASS ACCOLADE_OUVRANTE list_intraclasse ACCOLADE_FERMANTE
+                                ;
