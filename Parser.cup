@@ -4,13 +4,15 @@ import java.util.Vector;
 import java.io.*;
 
 parser code {:
-
-public void report_error(Symbol cur_token);
-
-public void report_error(Symbol cur_token){
-    System.out.println("Error rencontrée pour le token :"+cur_token+" rencontré à la ligne "+cur_token.left+" et colonne "+cur_token.right+".");
+public void syntax_error(Symbol cur_token){
+    //nous avons pris ligne +1 pour que ca corresponde a l'affichage des éditeurs de texte qui commencent souvent à la ligne 1 et non 0.
+    System.out.println("Erreur rencontrée pour le token "+cur_token.sym+" rencontré à la ligne "+(cur_token.left+1)+" et colonne "+cur_token.right+".");
 }
-
+/*
+public void unrecovered_syntax_error(Symbol cur_token){
+    System.out.println("Une erreur sur le token "+cur_token.sym+" ne peut être réparée. Le parser va continuer le traitement.");
+}
+*/
 :}
 
 //valeurs des variables
@@ -121,12 +123,20 @@ non terminal valeur;
 non terminal list_valeur;
 non terminal integer_list;
 non terminal tableau;
+non terminal valeur_tableau;
 
 non terminal if;
 non terminal else;
 
-precedence left ADD_ASSIGN, MUL_ASSIGN, TYPESIMPLE, STRING_LITERAL, CARACTERE, ENTIER, VIRGULE_FLOTTANTE, TRUE, FALSE, NULL, IDENTIFICATEUR, LISTOF, STATIC, STRUCTURE, TYPE, CLASS, FUNCTION, PROCEDURE, BREAK, STOP, RETURN, FOREACH, IN, WHILE, REPEAT, IF, ELSE, POINT_VIRGULE, ACCOLADE_OUVRANTE, ACCOLADE_FERMANTE, VIRGULE, DEUX_POINT, EGAL, PARENTHESE_OUVRANTE, PARENTHESE_FERMANTE, CROCHET_OUVRANT, CROCHET_FERMANT, EXCLAMATION, TILDE, CADRATIN, PLUS, ETOILE, BARRE_OBLIQUE, POURCENT, CHEVRON_INFERIEUR, CHEVRON_SUPERIEUR, ADD_ASSIGN, SUB_ASSIGN, MUL_ASSIGN, DIV_ASSIGN, MOD_ASSIGN, INC_OP, DEC_OP, AND_OP, OR_OP, LE_OP, GE_OP, EQ_OP, NE_OP;
-precedence right CIRCONFLEXE;
+
+precedence left ADD_ASSIGN, MUL_ASSIGN, CHEVRON_INFERIEUR, CHEVRON_SUPERIEUR, ADD_ASSIGN, SUB_ASSIGN, MUL_ASSIGN, DIV_ASSIGN, MOD_ASSIGN, INC_OP, DEC_OP, AND_OP, OR_OP, LE_OP, GE_OP, EQ_OP, NE_OP;
+precedence left TYPESIMPLE, STRING_LITERAL, CARACTERE, ENTIER, VIRGULE_FLOTTANTE, TRUE, FALSE, NULL, IDENTIFICATEUR, LISTOF;
+precedence left STATIC, STRUCTURE, TYPE, CLASS, FUNCTION, PROCEDURE, BREAK, STOP, RETURN, FOREACH, IN, WHILE, REPEAT, IF, ELSE;
+precedence left POINT_VIRGULE, ACCOLADE_FERMANTE, PARENTHESE_FERMANTE, CROCHET_FERMANT, VIRGULE, DEUX_POINT, EGAL, EXCLAMATION, TILDE;
+precedence left CADRATIN, PLUS, ETOILE, BARRE_OBLIQUE, POURCENT;
+
+precedence right CIRCONFLEXE, PARENTHESE_OUVRANTE, CROCHET_OUVRANT, ACCOLADE_OUVRANTE;
+
 
 
 start with declaration_class;
@@ -280,17 +290,20 @@ list_valeur ::= list_valeur VIRGULE valeur
 
 valeur ::= TRUE
     | FALSE
-    | NULL
+    | NULL    
+    | valeur_tableau
     | IDENTIFICATEUR
     | CARACTERE
     | ENTIER
     | VIRGULE_FLOTTANTE
     | STRING_LITERAL
-    | IDENTIFICATEUR CROCHET_OUVRANT IDENTIFICATEUR CROCHET_FERMANT
-    | IDENTIFICATEUR CROCHET_OUVRANT valeur CROCHET_FERMANT
     | tableau
     | operation_binaire
     | PARENTHESE_OUVRANTE valeur PARENTHESE_FERMANTE
+    ;
+
+valeur_tableau ::= IDENTIFICATEUR CROCHET_OUVRANT IDENTIFICATEUR CROCHET_FERMANT
+    | IDENTIFICATEUR CROCHET_OUVRANT valeur CROCHET_FERMANT
     ;
 
 type ::= TYPESIMPLE
