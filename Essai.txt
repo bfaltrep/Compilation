@@ -4,11 +4,18 @@ class tutu{
 	nom: string;
 	age: integer;
 	
+	f(a);
+
+	type test = structure {
+		test1 : string;
+		test2 : list of; //ERREUR, mais continue la compilation après le ;
+	}
+
 	/* je commente bcp
 	genre bcp bcp */
 	//commentaire tralala
 
-	procedure fiche(  ){
+	procedure fiche( tutu: string){
 		nom = "";
 		age = 0;
 	}
@@ -30,5 +37,7 @@ class tutu{
 	function getNom(): string{
 		return nom;
 	}
+
+
 
 }

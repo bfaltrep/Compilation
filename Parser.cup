@@ -111,7 +111,6 @@ non terminal list_instruction;
 non terminal negation;
 non terminal and;
 non terminal or;
-
 non terminal boolean_expression;
 non terminal logical_expression;
 non terminal compare_expression;
@@ -123,19 +122,21 @@ non terminal valeur;
 non terminal list_valeur;
 non terminal integer_list;
 non terminal tableau;
-non terminal valeur_tableau;
+non terminal valeur_boolean;
+non terminal valeur_tableau_imbrique;
+non terminal valeur_tableau_crochet;
 
 non terminal if;
 non terminal else;
 
-
 precedence left ADD_ASSIGN, MUL_ASSIGN, CHEVRON_INFERIEUR, CHEVRON_SUPERIEUR, ADD_ASSIGN, SUB_ASSIGN, MUL_ASSIGN, DIV_ASSIGN, MOD_ASSIGN, INC_OP, DEC_OP, AND_OP, OR_OP, LE_OP, GE_OP, EQ_OP, NE_OP;
-precedence left TYPESIMPLE, STRING_LITERAL, CARACTERE, ENTIER, VIRGULE_FLOTTANTE, TRUE, FALSE, NULL, IDENTIFICATEUR, LISTOF;
-precedence left STATIC, STRUCTURE, TYPE, CLASS, FUNCTION, PROCEDURE, BREAK, STOP, RETURN, FOREACH, IN, WHILE, REPEAT, IF, ELSE;
-precedence left POINT_VIRGULE, ACCOLADE_FERMANTE, PARENTHESE_FERMANTE, CROCHET_FERMANT, VIRGULE, DEUX_POINT, EGAL, EXCLAMATION, TILDE;
-precedence left CADRATIN, PLUS, ETOILE, BARRE_OBLIQUE, POURCENT;
+precedence left TYPESIMPLE, STRING_LITERAL, CARACTERE, ENTIER, VIRGULE_FLOTTANTE, TRUE, FALSE, NULL, LISTOF, IDENTIFICATEUR;
+precedence left POINT_VIRGULE, ACCOLADE_FERMANTE, PARENTHESE_FERMANTE, CROCHET_FERMANT, EXCLAMATION, TILDE;
+precedence left BREAK, STOP, RETURN, CADRATIN, PLUS, ETOILE, BARRE_OBLIQUE, POURCENT;
 
 precedence right CIRCONFLEXE, PARENTHESE_OUVRANTE, CROCHET_OUVRANT, ACCOLADE_OUVRANTE;
+precedence right DEUX_POINT, EGAL, VIRGULE;
+precedence right STATIC, STRUCTURE, TYPE, CLASS, FUNCTION, PROCEDURE, FOREACH, IN, WHILE, REPEAT, IF, ELSE;
 
 
 
@@ -148,6 +149,7 @@ declaration_class ::= CLASS IDENTIFICATEUR ACCOLADE_OUVRANTE list_intraclasse AC
 list_intraclasse ::= list_intraclasse intraclasse
     | intraclasse 
     |
+    | error intraclasse
     ;
 
 intraclasse ::= definition_intraclasse
@@ -179,9 +181,11 @@ list_declaration_argument ::= IDENTIFICATEUR DEUX_POINT type
     ;
 
 definition_intraclasse ::= TILDE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
+    | IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
     | FUNCTION IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE DEUX_POINT type ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
     | STATIC FUNCTION IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE DEUX_POINT type ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
     | PROCEDURE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
+    | STATIC PROCEDURE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
     ;
 
 integer_list ::= integer_list VIRGULE ENTIER
@@ -220,7 +224,8 @@ compare_expression ::= valeur CHEVRON_INFERIEUR valeur
     ;
 
 
-boolean_expression ::= logical_expression 
+boolean_expression ::= PARENTHESE_OUVRANTE boolean_expression PARENTHESE_FERMANTE
+    | logical_expression 
     | compare_expression
     ;
       
@@ -252,7 +257,7 @@ instruction ::= declaration_variable
     | operation_unaire POINT_VIRGULE
     | FOREACH IDENTIFICATEUR IN tableau ACCOLADE_OUVRANTE instruction ACCOLADE_FERMANTE
     | WHILE boolean_expression ACCOLADE_OUVRANTE instruction ACCOLADE_FERMANTE
-    | REPEAT  ACCOLADE_OUVRANTE instruction ACCOLADE_FERMANTE WHILE boolean_expression
+    | REPEAT ACCOLADE_OUVRANTE instruction ACCOLADE_FERMANTE WHILE boolean_expression
     | if
     | else
     | RETURN POINT_VIRGULE
@@ -288,10 +293,8 @@ list_valeur ::= list_valeur VIRGULE valeur
 	| 
 	;
 
-valeur ::= TRUE
-    | FALSE
-    | NULL    
-    | valeur_tableau
+valeur ::= valeur_boolean
+    | IDENTIFICATEUR valeur_tableau_imbrique
     | IDENTIFICATEUR
     | CARACTERE
     | ENTIER
@@ -302,8 +305,17 @@ valeur ::= TRUE
     | PARENTHESE_OUVRANTE valeur PARENTHESE_FERMANTE
     ;
 
-valeur_tableau ::= IDENTIFICATEUR CROCHET_OUVRANT IDENTIFICATEUR CROCHET_FERMANT
-    | IDENTIFICATEUR CROCHET_OUVRANT valeur CROCHET_FERMANT
+valeur_boolean ::= TRUE
+    | FALSE
+    | NULL  
+    ;  
+
+valeur_tableau_crochet ::= CROCHET_OUVRANT IDENTIFICATEUR CROCHET_FERMANT
+    | CROCHET_OUVRANT valeur CROCHET_FERMANT
+    ;
+
+valeur_tableau_imbrique ::= valeur_tableau_crochet
+    | valeur_tableau_imbrique valeur_tableau_crochet
     ;
 
 type ::= TYPESIMPLE
