@@ -242,7 +242,6 @@ instruction ::= list_declaration_variable
     | RETURN IDENTIFICATEUR POINT_VIRGULE
     | STOP POINT_VIRGULE
     | BREAK POINT_VIRGULE
-    | error POINT_VIRGULE
     ;
 
 operation_binaire ::= valeur POURCENT valeur

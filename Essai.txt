@@ -1,5 +1,5 @@
 class tutu{
-	monTableau: integer;
+	monTableau: list of client;
 	static id: integer;
 	nom: string;
 	age: integer;
