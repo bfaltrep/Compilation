@@ -20,6 +20,8 @@ class tutu{
 		age = 0;
 	}
 
+	test test
+
 	procedure fiche2(){
 		nom = "";
 		age = 0;
