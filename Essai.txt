@@ -8,7 +8,7 @@ class tutu{
 	genre bcp bcp */
 	//commentaire tralala
 
-	fiche(){
+	procedure fiche(  ){
 		nom = "";
 		age = 0;
 	}
@@ -19,8 +19,8 @@ class tutu{
 	}
 
 	~fiche(){
-		t: list of integer;
-		t = [1, 3];
+		t1: list of integer;
+		t2 = [1, 3];
 		foreach i  in [0, 1, 2, 3, 4]{
 			afficher(t[i]);
 		}
