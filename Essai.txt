@@ -1,18 +1,13 @@
 class tutu{
-	type client = structure {
-		nom: string;
-		date_de_naissance: integer;
-	};
-
-	monTableau: list of client;
+	monTableau: integer;
 	static id: integer;
 	nom: string;
 	age: integer;
 
 	//commentaire tralala
 	fiche(){
-		nom := "";
-		age := 0;
+		nom = "";
+		age = 0;
 	}
 
 	~fiche(){

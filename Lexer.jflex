@@ -14,8 +14,6 @@ import java_cup.runtime.*;
 
 %{
 
-private StringBuffer buffer;
-
 private Symbol symbol (int type) {
         return new Symbol (type, yyline, yycolumn);
 }
@@ -24,13 +22,28 @@ private Symbol symbol (int type, Object value) {
         return new Symbol (type, yyline, yycolumn, value);
 }
 
+/*
+	symboles non utilisés
+"?"				{ return symbol(ClassSymbol.INTERROGATION); }
+"->"				{ return symbol(ClassSymbol.PTR_OP); }
+"..."				{ return symbol(ClassSymbol.ELLIPSIS); }
+"."				{ return symbol(ClassSymbol.POINT); }
+
+">>"				{ return symbol(ClassSymbol.RIGHT_OP); }
+"<<"				{ return symbol(ClassSymbol.LEFT_OP); }
+
+"|"				{ return symbol(ClassSymbol.PIPE); }
+"&"				{ return symbol(ClassSymbol.ESPERLUETTTE); }
+
+*/
+
 %}
 
 entier = [0-9]+
 puissance = ('e'[0-9]+)?
 virgule_flottante = entier('.'entier)?puissance|'.'entier.puissance
 
-mot = [a-zA-Z][a-zA-Z0-9_\-]*
+identificateur = [a-zA-Z][a-zA-Z0-9_\-]*
 
 caractere = "0x"[0-9][0-9A-Fa-f]|'\''[.]?'\''
 whitespace = [ \t\v\n\f]
@@ -48,7 +61,7 @@ whitespace = [ \t\v\n\f]
 "false" { return symbol(ClassSymbol.FALSE); }
 "null" { return symbol(ClassSymbol.NULL); }
 
-"list of " { return symbol(ClassSymbol.LISTOF); }
+"list of" { System.out.println("LISTOF "); return symbol(ClassSymbol.LISTOF); }
 "static" { return symbol(ClassSymbol.STATIC); }
 "structure" { return symbol(ClassSymbol.STRUCTURE); }
 "type" { return symbol(ClassSymbol.TYPE); }
@@ -69,28 +82,26 @@ whitespace = [ \t\v\n\f]
 "else" { return symbol(ClassSymbol.ELSE); }
 
 
-{mot} { buffer.append(yytext()); return symbol(ClassSymbol.MOT, buffer);}
+{identificateur} { System.out.println("id : "+yytext()); return symbol(ClassSymbol.IDENTIFICATEUR, yytext()); }
 
 {caractere} { return symbol(ClassSymbol.CARACTERE, yytext());}
-{entier} { return symbol(ClassSymbol.ENTIER, Integer.parseInt(yytext()));}
+{entier} { return symbol(ClassSymbol.ENTIER, Integer.parseInt(yytext())); }
 {virgule_flottante} {return symbol(ClassSymbol.VIRGULE_FLOTTANTE);}
 {whitespace} {}
 
 
 //Symboles
 
-";"				{ return symbol(ClassSymbol.POINT_VIRGULE); }
+";"				{ System.out.println("PV "); return symbol(ClassSymbol.POINT_VIRGULE); }
 "{"				{ return symbol(ClassSymbol.ACCOLADE_OUVRANTE); }
 "}"				{ return symbol(ClassSymbol.ACCOLADE_FERMANTE); }
 ","				{ return symbol(ClassSymbol.VIRGULE); }
-":"				{ return symbol(ClassSymbol.DEUX_POINT); }
+":"				{ System.out.println("DP "); return symbol(ClassSymbol.DEUX_POINT); }
 "="				{ return symbol(ClassSymbol.EGAL); }
 "("				{ return symbol(ClassSymbol.PARENTHESE_OUVRANTE); }
 ")"				{ return symbol(ClassSymbol.PARENTHESE_FERMANTE); }
 "["				{ return symbol(ClassSymbol.CROCHET_OUVRANT); }
 "]"				{ return symbol(ClassSymbol.CROCHET_FERMANT); }
-"."				{ return symbol(ClassSymbol.POINT); }
-"&"				{ return symbol(ClassSymbol.ESPERLUETTTE); }
 "!"				{ return symbol(ClassSymbol.EXCLAMATION); }
 "~"				{ return symbol(ClassSymbol.TILDE); }
 "-"				{ return symbol(ClassSymbol.CADRATIN); }
@@ -101,25 +112,17 @@ whitespace = [ \t\v\n\f]
 "<"				{ return symbol(ClassSymbol.CHEVRON_INFERIEUR); }
 ">"				{ return symbol(ClassSymbol.CHEVRON_SUPERIEUR); }
 "^"				{ return symbol(ClassSymbol.CIRCONFLEXE); }
-"|"				{ return symbol(ClassSymbol.PIPE); }
-"?"				{ return symbol(ClassSymbol.INTERROGATION); }
 
 //Opérateurs
 
-"..."				{ return symbol(ClassSymbol.ELLIPSIS); }
+
 "+="				{ return symbol(ClassSymbol.ADD_ASSIGN); }
 "-="				{ return symbol(ClassSymbol.SUB_ASSIGN); }
 "*="				{ return symbol(ClassSymbol.MUL_ASSIGN); }
 "/="				{ return symbol(ClassSymbol.DIV_ASSIGN); }
 "%="				{ return symbol(ClassSymbol.MOD_ASSIGN); }
-"&="				{ return symbol(ClassSymbol.AND_ASSIGN); }
-"^="				{ return symbol(ClassSymbol.XOR_ASSIGN); }
-"|="				{ return symbol(ClassSymbol.OR_ASSIGN); }
-">>"				{ return symbol(ClassSymbol.RIGHT_OP); }
-"<<"				{ return symbol(ClassSymbol.LEFT_OP); }
 "++"				{ return symbol(ClassSymbol.INC_OP); }
 "--"				{ return symbol(ClassSymbol.DEC_OP); }
-"->"				{ return symbol(ClassSymbol.PTR_OP); }
 "&&"				{ return symbol(ClassSymbol.AND_OP); }
 "||"				{ return symbol(ClassSymbol.OR_OP); }
 "<="				{ return symbol(ClassSymbol.LE_OP); }
@@ -140,3 +143,7 @@ whitespace = [ \t\v\n\f]
 <YYINITIAL>'\"' { yybegin(STRING); return symbol(ClassSymbol.STRING_LITERAL); }
 
 <STRING>'\"' { yybegin(YYINITIAL); }
+
+//Probleme
+
+. { System.out.println("error : unknow token. line:"+yyline+", column:"+yycolumn); }

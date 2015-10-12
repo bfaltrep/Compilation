@@ -3,6 +3,7 @@ import java_cup.runtime.*;
 import java.util.Vector;
 import java.io.*;
 
+//valeurs des variables
 terminal IdType TYPESIMPLE;
 terminal STRING_LITERAL;
 terminal CARACTERE;
@@ -12,9 +13,10 @@ terminal TRUE;
 terminal FALSE;
 terminal NULL;
 
-terminal MOT;
+//tout IDENTIFICATEUR créé par l'utilisateur
+terminal IDENTIFICATEUR;
 
-//mots clefs
+//IDENTIFICATEURs clefs
 terminal LISTOF;
 terminal STATIC;
 terminal STRUCTURE;
@@ -46,8 +48,6 @@ terminal PARENTHESE_OUVRANTE;
 terminal PARENTHESE_FERMANTE;
 terminal CROCHET_OUVRANT;
 terminal CROCHET_FERMANT;
-terminal POINT;
-terminal ESPERLUETTTE;
 terminal EXCLAMATION;
 terminal TILDE;
 terminal CADRATIN;
@@ -58,24 +58,16 @@ terminal POURCENT;
 terminal CHEVRON_INFERIEUR;
 terminal CHEVRON_SUPERIEUR;
 terminal CIRCONFLEXE;
-terminal PIPE;
-terminal INTERROGATION;
+
 
 //Operateurs
-terminal ELLIPSIS;
 terminal ADD_ASSIGN;
 terminal SUB_ASSIGN;
 terminal MUL_ASSIGN;
 terminal DIV_ASSIGN;
 terminal MOD_ASSIGN;
-terminal AND_ASSIGN;
-terminal XOR_ASSIGN;
-terminal OR_ASSIGN;
-terminal RIGHT_OP;
-terminal LEFT_OP;
 terminal INC_OP;
 terminal DEC_OP;
-terminal PTR_OP;
 terminal AND_OP;
 terminal OR_OP;
 terminal LE_OP;
@@ -83,7 +75,6 @@ terminal GE_OP;
 terminal EQ_OP;
 terminal NE_OP;
 
-non terminal axiom;
 non terminal declaration_class;
 non terminal list_intraclasse;
 non terminal intraclasse;
@@ -91,17 +82,10 @@ non terminal intraclasse;
 non terminal declaration_intraclasse;
 non terminal definitions_intraclasse;
 
-non terminal declaration_fonction;
-non terminal declaration_procedure;
 non terminal declaration_variable;
-non terminal declaration_structure;
-non terminal declaration_type;
-non terminal declaration_tableau;
+non terminal list_declaration_variable;
+non terminal list_declaration_argument;
 
-non terminal definition_constructeur;
-non terminal definition_destructeur;
-non terminal definition_fonction;
-non terminal definition_procedure;
 non terminal definition_structure;
 non terminal affectation_variable;
 non terminal affectation_tableau;
@@ -109,136 +93,202 @@ non terminal affectation_tableau;
 non terminal type;
 non terminal type_complexe;
 
-non terminal condiboucle;
-non terminal list_declaration_argument;
-non terminal list_declaration_variable;
-non terminal declaration_argument;
-non terminal bloc;
+non terminal instruction;
+non terminal instruction_list;
+
+non terminal negation;
+non terminal and;
+non terminal or;
+
+non terminal boolean_expression;
+non terminal logical_expression;
+non terminal compare_expression;
+non terminal operation_binaire;
+non terminal operation_binaire_assign;
+non terminal operation_unaire;
 
 non terminal valeur;
 non terminal list_valeur;
+non terminal integer_list;
+non terminal tableau;
 
-start with axiom;
+non terminal if;
+non terminal else;
 
-condiboucle ::= FOREACH
- | IN
- | WHILE
- | REPEAT
- | IF
- | ELSE
- ;
+precedence left ADD_ASSIGN, MUL_ASSIGN, TYPESIMPLE, STRING_LITERAL, CARACTERE, ENTIER, VIRGULE_FLOTTANTE, TRUE, FALSE, NULL, IDENTIFICATEUR, LISTOF, STATIC, STRUCTURE, TYPE, CLASS, FUNCTION, PROCEDURE, BREAK, STOP, RETURN, FOREACH, IN, WHILE, REPEAT, IF, ELSE, POINT_VIRGULE, ACCOLADE_OUVRANTE, ACCOLADE_FERMANTE, VIRGULE, DEUX_POINT, EGAL, PARENTHESE_OUVRANTE, PARENTHESE_FERMANTE, CROCHET_OUVRANT, CROCHET_FERMANT, EXCLAMATION, TILDE, CADRATIN, PLUS, ETOILE, BARRE_OBLIQUE, POURCENT, CHEVRON_INFERIEUR, CHEVRON_SUPERIEUR, ADD_ASSIGN, SUB_ASSIGN, MUL_ASSIGN, DIV_ASSIGN, MOD_ASSIGN, INC_OP, DEC_OP, AND_OP, OR_OP, LE_OP, GE_OP, EQ_OP, NE_OP;
+precedence right CIRCONFLEXE;
 
 
 
-axiom ::= declaration_class
-       |
-       ;
+start with declaration_class;
 
-declaration_class ::= CLASS MOT ACCOLADE_OUVRANTE list_intraclasse ACCOLADE_FERMANTE {: System.out.println("finit."); :}
-					| CLASS MOT ACCOLADE_OUVRANTE ACCOLADE_FERMANTE {: System.out.println("finit."); :}
-					;
+declaration_class ::= CLASS IDENTIFICATEUR ACCOLADE_OUVRANTE list_intraclasse ACCOLADE_FERMANTE {: System.out.println("compilation terminée."); :} 
+    | CLASS IDENTIFICATEUR ACCOLADE_OUVRANTE ACCOLADE_FERMANTE {: System.out.println("compilation terminée."); :}
+    ;
 
 list_intraclasse ::= list_intraclasse intraclasse
-            	   | intraclasse 
-                   ;
+    | intraclasse 
+    ;
 
-intraclasse ::=  declaration_intraclasse
-              | definitions_intraclasse
-              ;
+intraclasse ::= declaration_intraclasse
+    | definitions_intraclasse
+    ;
 
-declaration_intraclasse ::= declaration_fonction
-                        | declaration_procedure
-                        | declaration_variable POINT_VIRGULE
-                        | declaration_type POINT_VIRGULE
-                        ;
+declaration_intraclasse ::= STATIC FUNCTION IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE DEUX_POINT type POINT_VIRGULE
+    | FUNCTION IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE DEUX_POINT type POINT_VIRGULE
+    | PROCEDURE IDENTIFICATEUR DEUX_POINT type POINT_VIRGULE
+    | list_declaration_variable
+    | TYPE IDENTIFICATEUR EGAL STRUCTURE ACCOLADE_OUVRANTE list_declaration_variable ACCOLADE_FERMANTE POINT_VIRGULE
+    ;
 
-declaration_fonction ::= FUNCTION MOT PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE DEUX_POINT type POINT_VIRGULE
-                       ;
+declaration_variable ::= IDENTIFICATEUR DEUX_POINT type POINT_VIRGULE
+    | STATIC IDENTIFICATEUR DEUX_POINT type POINT_VIRGULE
+    ;
+list_declaration_variable ::= list_declaration_variable declaration_variable  
+    | declaration_variable
+    |
+    ;
 
-declaration_procedure ::= PROCEDURE MOT DEUX_POINT type POINT_VIRGULE
-                        ;
+list_declaration_argument ::= IDENTIFICATEUR DEUX_POINT type
+    | list_declaration_argument VIRGULE IDENTIFICATEUR DEUX_POINT type
+    |
+    ;
 
-list_declaration_variable ::= declaration_variable
-                            | declaration_variable POINT_VIRGULE list_declaration_variable
-                            |
-                            ;
+definitions_intraclasse ::= TILDE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE ACCOLADE_OUVRANTE instruction_list ACCOLADE_FERMANTE
+    | IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE ACCOLADE_OUVRANTE instruction_list ACCOLADE_FERMANTE 
+    | FUNCTION IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE DEUX_POINT type ACCOLADE_OUVRANTE instruction_list ACCOLADE_FERMANTE
+    | STATIC FUNCTION IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE DEUX_POINT type ACCOLADE_OUVRANTE instruction_list ACCOLADE_FERMANTE
+    | PROCEDURE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE ACCOLADE_OUVRANTE instruction_list ACCOLADE_FERMANTE
+    | definition_structure
+    ;
 
-list_declaration_argument ::= declaration_argument
-| declaration_argument VIRGULE list_declaration_argument
-|
-;
-
-declaration_variable ::= MOT DEUX_POINT type 
-                       ;
-
-declaration_type ::= TYPE MOT EGAL STRUCTURE ACCOLADE_OUVRANTE list_declaration_variable ACCOLADE_FERMANTE
-;
-
-
-definitions_intraclasse ::= definition_constructeur
-                                        | definition_destructeur
-                                        | definition_fonction
-                                        | definition_procedure
-                                        | affectation_variable
-                                        | definition_structure
-                                        ;
-
-
-definition_constructeur ::= MOT PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE ACCOLADE_OUVRANTE bloc ACCOLADE_FERMANTE 
-
+integer_list ::= integer_list VIRGULE ENTIER
+    | 
     ;
 
 
-definition_destructeur ::= TILDE MOT PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE ACCOLADE_OUVRANTE bloc ACCOLADE_FERMANTE
-;
+tableau ::= CROCHET_OUVRANT integer_list CROCHET_FERMANT
+    ;
 
-definition_fonction ::= FUNCTION MOT PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE DEUX_POINT type ACCOLADE_OUVRANTE bloc ACCOLADE_FERMANTE
-;
 
-definition_procedure ::= PROCEDURE MOT PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE ACCOLADE_OUVRANTE bloc ACCOLADE_FERMANTE
-;
+and ::= valeur AND_OP valeur
+    ;
 
-affectation_variable ::= MOT EGAL valeur POINT_VIRGULE
-| MOT DEUX_POINT EGAL valeur POINT_VIRGULE
-;
 
-bloc ::= declaration_variable
+or ::= valeur OR_OP valeur
+    ;
+
+
+negation ::= valeur EXCLAMATION valeur
+    ;
+
+
+logical_expression ::= and
+    | or
+    | negation
+    ;
+
+
+
+compare_expression ::= valeur CHEVRON_INFERIEUR valeur
+    | valeur CHEVRON_SUPERIEUR valeur
+    | valeur LE_OP valeur
+    | valeur GE_OP valeur
+    | valeur EQ_OP valeur
+    | valeur NE_OP valeur
+    ;
+
+
+boolean_expression ::= logical_expression 
+    | compare_expression
+    ;
+      
+affectation_variable ::= IDENTIFICATEUR EGAL valeur POINT_VIRGULE
+    | IDENTIFICATEUR EGAL operation_binaire POINT_VIRGULE
+    | IDENTIFICATEUR EGAL operation_unaire POINT_VIRGULE
+    | IDENTIFICATEUR EGAL IDENTIFICATEUR PARENTHESE_OUVRANTE list_valeur PARENTHESE_FERMANTE POINT_VIRGULE
+    ;
+
+if ::= IF boolean_expression ACCOLADE_OUVRANTE instruction ACCOLADE_FERMANTE
+	;
+
+else ::= ELSE ACCOLADE_OUVRANTE instruction ACCOLADE_FERMANTE
+    | ELSE if 
+    ;
+
+instruction_list ::= instruction
+    | instruction_list instruction
+    ;
+
+instruction ::= list_declaration_variable
     | affectation_variable
-    | condiboucle
     | affectation_tableau
+    | IDENTIFICATEUR PARENTHESE_OUVRANTE list_valeur PARENTHESE_FERMANTE POINT_VIRGULE
+    | valeur EGAL operation_binaire POINT_VIRGULE
+    | valeur EGAL operation_unaire POINT_VIRGULE
+    | operation_binaire_assign POINT_VIRGULE
+    | operation_unaire POINT_VIRGULE
+    | FOREACH IDENTIFICATEUR IN tableau ACCOLADE_OUVRANTE instruction ACCOLADE_FERMANTE
+    | WHILE boolean_expression ACCOLADE_OUVRANTE instruction ACCOLADE_FERMANTE
+    | REPEAT  ACCOLADE_OUVRANTE instruction ACCOLADE_FERMANTE WHILE boolean_expression
+    | if
+    | else
     | RETURN POINT_VIRGULE
-    | RETURN MOT POINT_VIRGULE
+    | RETURN IDENTIFICATEUR POINT_VIRGULE
+    | STOP POINT_VIRGULE
+    | BREAK POINT_VIRGULE
+    | error POINT_VIRGULE
     ;
 
+operation_binaire ::= valeur POURCENT valeur
+    | valeur CADRATIN valeur
+    | valeur PLUS valeur
+    | valeur ETOILE valeur
+    | valeur BARRE_OBLIQUE valeur
+    ;
 
-
-declaration_tableau ::= CROCHET_OUVRANT list_valeur CROCHET_FERMANT POINT_VIRGULE
-;
-
-list_valeur ::= valeur VIRGULE list_valeur
-| valeur 
-| 
-;
+operation_binaire_assign ::= valeur ADD_ASSIGN valeur 
+    | valeur SUB_ASSIGN valeur 
+    | valeur MUL_ASSIGN valeur
+    | valeur DIV_ASSIGN valeur 
+    | valeur MOD_ASSIGN valeur
+    ;
+    
+operation_unaire ::= valeur INC_OP
+    | valeur DEC_OP
+    | INC_OP valeur
+    | DEC_OP valeur
+    | PLUS valeur
+    | CADRATIN valeur
+    ;
+    
+list_valeur ::= list_valeur VIRGULE valeur
+	| valeur 
+	| 
+	;
 
 valeur ::= TRUE
-| FALSE
-| NULL
-| MOT
-| CARACTERE
-| ENTIER
-| VIRGULE_FLOTTANTE
-| STRING_LITERAL
-| declaration_tableau
-| type_complexe
-;
-
+    | FALSE
+    | NULL
+    | IDENTIFICATEUR
+    | CARACTERE
+    | ENTIER
+    | VIRGULE_FLOTTANTE
+    | STRING_LITERAL
+    | tableau
+    | operation_binaire
+    | PARENTHESE_OUVRANTE valeur PARENTHESE_FERMANTE
+    ;
 
 type ::= TYPESIMPLE
-                | type_complexe
-                ;
+    | type_complexe
+    ;
 
-type_complexe ::= LISTOF type 
-                                | CIRCONFLEXE type
-                                | STRUCTURE ACCOLADE_OUVRANTE list_declaration_variable ACCOLADE_FERMANTE
-                                | CLASS ACCOLADE_OUVRANTE list_intraclasse ACCOLADE_FERMANTE
-                                ;
+type_complexe ::= LISTOF type
+    | LISTOF IDENTIFICATEUR
+    | CIRCONFLEXE type
+    | STRUCTURE ACCOLADE_OUVRANTE list_declaration_variable ACCOLADE_FERMANTE
+    | CLASS ACCOLADE_OUVRANTE list_intraclasse ACCOLADE_FERMANTE
+    | error POINT_VIRGULE
+    ;
+
