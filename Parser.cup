@@ -92,6 +92,7 @@ non terminal affectation_tableau;
 
 non terminal type;
 non terminal type_complexe;
+non terminal structure;
 
 non terminal instruction;
 non terminal instruction_list;
@@ -138,12 +139,16 @@ declaration_intraclasse ::= STATIC FUNCTION IDENTIFICATEUR PARENTHESE_OUVRANTE l
     | FUNCTION IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE DEUX_POINT type POINT_VIRGULE
     | PROCEDURE IDENTIFICATEUR DEUX_POINT type POINT_VIRGULE
     | list_declaration_variable
-    | TYPE IDENTIFICATEUR EGAL STRUCTURE ACCOLADE_OUVRANTE list_declaration_variable ACCOLADE_FERMANTE POINT_VIRGULE
+    | TYPE IDENTIFICATEUR EGAL structure POINT_VIRGULE
+    ;
+
+structure ::= STRUCTURE ACCOLADE_OUVRANTE list_declaration_variable ACCOLADE_FERMANTE 
     ;
 
 declaration_variable ::= IDENTIFICATEUR DEUX_POINT type POINT_VIRGULE
     | STATIC IDENTIFICATEUR DEUX_POINT type POINT_VIRGULE
     ;
+
 list_declaration_variable ::= list_declaration_variable declaration_variable  
     | declaration_variable
     |
@@ -287,7 +292,7 @@ type ::= TYPESIMPLE
 type_complexe ::= LISTOF type
     | LISTOF IDENTIFICATEUR
     | CIRCONFLEXE type
-    | STRUCTURE ACCOLADE_OUVRANTE list_declaration_variable ACCOLADE_FERMANTE
+    | structure
     | CLASS ACCOLADE_OUVRANTE list_intraclasse ACCOLADE_FERMANTE
     | error POINT_VIRGULE
     ;
