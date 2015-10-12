@@ -8,10 +8,6 @@ import java_cup.runtime.*;
 %cupsym ClassSymbol
 %cup
 
-
-%xstate COMMENT
-%xstate STRING
-
 %{
 
 private Symbol symbol (int type) {
@@ -49,7 +45,11 @@ caractere = "0x"[0-9][0-9A-Fa-f]|'\''[.]?'\''
 whitespace = [ \t\v\n\f]
 %%
 
-//Mots clefs 
+"/*" ~"*/" { System.out.println("commentaire"); }
+
+"//" ~\n { System.out.println("commentaire_l"); }
+
+[\"] ~[\"] { return symbol(ClassSymbol.STRING_LITERAL, yytext()); }
 
 "integer" { return symbol(ClassSymbol.TYPESIMPLE , IdType.INTEGER); }
 "character" { return symbol(ClassSymbol.TYPESIMPLE, IdType.CHARACTER); }
@@ -81,16 +81,12 @@ whitespace = [ \t\v\n\f]
 "if" { return symbol(ClassSymbol.IF); }
 "else" { return symbol(ClassSymbol.ELSE); }
 
-
 {identificateur} { System.out.println("id : "+yytext()); return symbol(ClassSymbol.IDENTIFICATEUR, yytext()); }
 
 {caractere} { return symbol(ClassSymbol.CARACTERE, yytext());}
 {entier} { return symbol(ClassSymbol.ENTIER, Integer.parseInt(yytext())); }
 {virgule_flottante} {return symbol(ClassSymbol.VIRGULE_FLOTTANTE);}
 {whitespace} {}
-
-
-//Symboles
 
 ";"				{ System.out.println("PV "); return symbol(ClassSymbol.POINT_VIRGULE); }
 "{"				{ return symbol(ClassSymbol.ACCOLADE_OUVRANTE); }
@@ -113,9 +109,6 @@ whitespace = [ \t\v\n\f]
 ">"				{ return symbol(ClassSymbol.CHEVRON_SUPERIEUR); }
 "^"				{ return symbol(ClassSymbol.CIRCONFLEXE); }
 
-//Opérateurs
-
-
 "+="				{ return symbol(ClassSymbol.ADD_ASSIGN); }
 "-="				{ return symbol(ClassSymbol.SUB_ASSIGN); }
 "*="				{ return symbol(ClassSymbol.MUL_ASSIGN); }
@@ -130,20 +123,4 @@ whitespace = [ \t\v\n\f]
 "=="				{ return symbol(ClassSymbol.EQ_OP); }
 "!="				{ return symbol(ClassSymbol.NE_OP); }
 
-//commentaires
-
-<YYINITIAL>"/*" { yybegin(COMMENT); }
-<YYINITIAL>"/**" { yybegin(COMMENT); }
-<COMMENT>"*/" { yybegin(YYINITIAL); }
-<COMMENT>"**/" { yybegin(YYINITIAL); }
-
-
-// caracteres echappements entre guillemets
-
-<YYINITIAL>'\"' { yybegin(STRING); return symbol(ClassSymbol.STRING_LITERAL); }
-
-<STRING>'\"' { yybegin(YYINITIAL); }
-
-//Probleme
-
-. { System.out.println("error : unknow token. line:"+yyline+", column:"+yycolumn); }
+. { System.out.println("error : unknow token "+ yytext() +". line:"+yyline+", column:"+yycolumn); }
