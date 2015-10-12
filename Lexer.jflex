@@ -89,13 +89,13 @@ whitespace = [ \t\v\n\f]
 {whitespace} {}
 
 ";"				{ System.out.println("PV "); return symbol(ClassSymbol.POINT_VIRGULE); }
-"{"				{ return symbol(ClassSymbol.ACCOLADE_OUVRANTE); }
+"{"				{ System.out.println("accolade ouvrante"); return symbol(ClassSymbol.ACCOLADE_OUVRANTE); }
 "}"				{ return symbol(ClassSymbol.ACCOLADE_FERMANTE); }
 ","				{ return symbol(ClassSymbol.VIRGULE); }
 ":"				{ System.out.println("DP "); return symbol(ClassSymbol.DEUX_POINT); }
 "="				{ return symbol(ClassSymbol.EGAL); }
-"("				{ return symbol(ClassSymbol.PARENTHESE_OUVRANTE); }
-")"				{ return symbol(ClassSymbol.PARENTHESE_FERMANTE); }
+"("				{ System.out.println("parenthese ouvrante"); return symbol(ClassSymbol.PARENTHESE_OUVRANTE); }
+")"				{ System.out.println("parenthese fermante"); return symbol(ClassSymbol.PARENTHESE_FERMANTE); }
 "["				{ return symbol(ClassSymbol.CROCHET_OUVRANT); }
 "]"				{ return symbol(ClassSymbol.CROCHET_FERMANT); }
 "!"				{ return symbol(ClassSymbol.EXCLAMATION); }

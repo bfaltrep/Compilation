@@ -80,7 +80,7 @@ non terminal list_intraclasse;
 non terminal intraclasse;
 
 non terminal declaration_intraclasse;
-non terminal definitions_intraclasse;
+non terminal definition_intraclasse;
 
 non terminal declaration_variable;
 non terminal list_declaration_variable;
@@ -95,7 +95,7 @@ non terminal type_complexe;
 non terminal structure;
 
 non terminal instruction;
-non terminal instruction_list;
+non terminal list_instruction;
 
 non terminal negation;
 non terminal and;
@@ -132,12 +132,13 @@ list_intraclasse ::= list_intraclasse intraclasse
     ;
 
 intraclasse ::= declaration_intraclasse
-    | definitions_intraclasse
+    | definition_intraclasse
     ;
 
 declaration_intraclasse ::= STATIC FUNCTION IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE DEUX_POINT type POINT_VIRGULE
     | FUNCTION IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE DEUX_POINT type POINT_VIRGULE
-    | PROCEDURE IDENTIFICATEUR DEUX_POINT type POINT_VIRGULE
+    | STATIC PROCEDURE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE POINT_VIRGULE
+    | PROCEDURE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE POINT_VIRGULE
     | list_declaration_variable
     | TYPE IDENTIFICATEUR EGAL structure POINT_VIRGULE
     ;
@@ -151,7 +152,6 @@ declaration_variable ::= IDENTIFICATEUR DEUX_POINT type POINT_VIRGULE
 
 list_declaration_variable ::= list_declaration_variable declaration_variable  
     | declaration_variable
-    |
     ;
 
 list_declaration_argument ::= IDENTIFICATEUR DEUX_POINT type
@@ -159,11 +159,12 @@ list_declaration_argument ::= IDENTIFICATEUR DEUX_POINT type
     |
     ;
 
-definitions_intraclasse ::= TILDE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE ACCOLADE_OUVRANTE instruction_list ACCOLADE_FERMANTE
-    | IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE ACCOLADE_OUVRANTE instruction_list ACCOLADE_FERMANTE 
-    | FUNCTION IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE DEUX_POINT type ACCOLADE_OUVRANTE instruction_list ACCOLADE_FERMANTE
-    | STATIC FUNCTION IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE DEUX_POINT type ACCOLADE_OUVRANTE instruction_list ACCOLADE_FERMANTE
-    | PROCEDURE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE ACCOLADE_OUVRANTE instruction_list ACCOLADE_FERMANTE
+definition_intraclasse ::= TILDE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
+    | IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE 
+    | IDENTIFICATEUR PARENTHESE_OUVRANTE PARENTHESE_FERMANTE ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
+    | FUNCTION IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE DEUX_POINT type ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
+    | STATIC FUNCTION IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE DEUX_POINT type ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
+    | PROCEDURE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
     | definition_structure
     ;
 
@@ -193,8 +194,6 @@ logical_expression ::= and
     | negation
     ;
 
-
-
 compare_expression ::= valeur CHEVRON_INFERIEUR valeur
     | valeur CHEVRON_SUPERIEUR valeur
     | valeur LE_OP valeur
@@ -214,18 +213,19 @@ affectation_variable ::= IDENTIFICATEUR EGAL valeur POINT_VIRGULE
     | IDENTIFICATEUR EGAL IDENTIFICATEUR PARENTHESE_OUVRANTE list_valeur PARENTHESE_FERMANTE POINT_VIRGULE
     ;
 
-if ::= IF boolean_expression ACCOLADE_OUVRANTE instruction ACCOLADE_FERMANTE
+if ::= IF boolean_expression ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
 	;
 
-else ::= ELSE ACCOLADE_OUVRANTE instruction ACCOLADE_FERMANTE
+else ::= ELSE ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
     | ELSE if 
     ;
 
-instruction_list ::= instruction
-    | instruction_list instruction
+list_instruction ::= instruction
+    | list_instruction instruction
+    |
     ;
 
-instruction ::= list_declaration_variable
+instruction ::= declaration_variable
     | affectation_variable
     | affectation_tableau
     | IDENTIFICATEUR PARENTHESE_OUVRANTE list_valeur PARENTHESE_FERMANTE POINT_VIRGULE

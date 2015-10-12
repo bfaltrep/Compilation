@@ -4,6 +4,9 @@ class tutu{
 	nom: string;
 	age: integer;
 
+	/* je commente bcp
+	genre bcp bcp */
+
 	//commentaire tralala
 	fiche(){
 		nom = "";
