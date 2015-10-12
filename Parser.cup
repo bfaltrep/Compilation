@@ -124,11 +124,11 @@ precedence right CIRCONFLEXE;
 start with declaration_class;
 
 declaration_class ::= CLASS IDENTIFICATEUR ACCOLADE_OUVRANTE list_intraclasse ACCOLADE_FERMANTE {: System.out.println("compilation terminée."); :} 
-    | CLASS IDENTIFICATEUR ACCOLADE_OUVRANTE ACCOLADE_FERMANTE {: System.out.println("compilation terminée."); :}
     ;
 
 list_intraclasse ::= list_intraclasse intraclasse
     | intraclasse 
+    |
     ;
 
 intraclasse ::= declaration_intraclasse
@@ -154,14 +154,13 @@ list_declaration_variable ::= list_declaration_variable declaration_variable
     | declaration_variable
     ;
 
-list_declaration_argument ::= IDENTIFICATEUR DEUX_POINT type
-    | list_declaration_argument VIRGULE IDENTIFICATEUR DEUX_POINT type
+list_declaration_argument ::= IDENTIFICATEUR {: System.out.println("test ds arg"); :} DEUX_POINT type
+    | list_declaration_argument VIRGULE {: System.out.println("test ds list_arg"); :} IDENTIFICATEUR DEUX_POINT type
     |
     ;
 
 definition_intraclasse ::= TILDE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
     | IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE 
-    | IDENTIFICATEUR PARENTHESE_OUVRANTE PARENTHESE_FERMANTE ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
     | FUNCTION IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE DEUX_POINT type ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
     | STATIC FUNCTION IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE DEUX_POINT type ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
     | PROCEDURE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE

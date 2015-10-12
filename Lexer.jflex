@@ -61,7 +61,7 @@ whitespace = [ \t\v\n\f]
 "false" { return symbol(ClassSymbol.FALSE); }
 "null" { return symbol(ClassSymbol.NULL); }
 
-"list of" { System.out.println("LISTOF "); return symbol(ClassSymbol.LISTOF); }
+"list of" { return symbol(ClassSymbol.LISTOF); }
 "static" { return symbol(ClassSymbol.STATIC); }
 "structure" { return symbol(ClassSymbol.STRUCTURE); }
 "type" { return symbol(ClassSymbol.TYPE); }

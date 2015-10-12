@@ -3,12 +3,17 @@ class tutu{
 	static id: integer;
 	nom: string;
 	age: integer;
-
+	
 	/* je commente bcp
 	genre bcp bcp */
-
 	//commentaire tralala
+
 	fiche(){
+		nom = "";
+		age = 0;
+	}
+
+	procedure fiche2(){
 		nom = "";
 		age = 0;
 	}
