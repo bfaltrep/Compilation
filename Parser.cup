@@ -220,7 +220,8 @@ compare_expression ::= valeur CHEVRON_INFERIEUR valeur
     ;
 
 
-boolean_expression ::= logical_expression 
+boolean_expression ::= PARENTHESE_OUVRANTE boolean_expression PARENTHESE_FERMANTE 
+    | logical_expression 
     | compare_expression
     ;
       
@@ -242,6 +243,7 @@ else ::= ELSE ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
 list_instruction ::= instruction
     | list_instruction instruction
     |
+    | error instruction
     ;
 
 instruction ::= declaration_variable
@@ -286,6 +288,7 @@ operation_unaire ::= valeur INC_OP
 list_valeur ::= list_valeur VIRGULE valeur
 	| valeur
 	| 
+    | error valeur
 	;
 
 valeur ::= TRUE
