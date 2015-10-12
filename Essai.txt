@@ -24,6 +24,7 @@ class tutu{
 		foreach i  in [0, 1, 2, 3, 4]{
 			afficher(t[i]);
 		}
+		t2[1] = 3;
 	}
 
 	function getNom(): string{

@@ -45,59 +45,59 @@ caractere = "0x"[0-9][0-9A-Fa-f]|'\''[.]?'\''
 whitespace = [ \t\v\n\f]
 %%
 
-"/*" ~"*/" { System.out.println("commentaire"); }
+"/*" ~"*/" 		{ System.out.println("commentaire"); }
 
-"//" ~\n { System.out.println("commentaire_l"); }
+"//" ~\n 		{ System.out.println("commentaire_l"); }
 
-[\"] ~[\"] { return symbol(ClassSymbol.STRING_LITERAL, yytext()); }
+[\"] ~[\"] 		{ return symbol(ClassSymbol.STRING_LITERAL, yytext()); }
 
-"integer" { return symbol(ClassSymbol.TYPESIMPLE , IdType.INTEGER); }
-"character" { return symbol(ClassSymbol.TYPESIMPLE, IdType.CHARACTER); }
-"float" { return symbol(ClassSymbol.TYPESIMPLE, IdType.FLOAT); }
-"boolean" { return symbol(ClassSymbol.TYPESIMPLE, IdType.BOOLEAN); }
-"string" { return symbol(ClassSymbol.TYPESIMPLE, IdType.STRING); }
+"integer" 		{ return symbol(ClassSymbol.TYPESIMPLE , IdType.INTEGER); }
+"character" 	{ return symbol(ClassSymbol.TYPESIMPLE, IdType.CHARACTER); }
+"float" 		{ return symbol(ClassSymbol.TYPESIMPLE, IdType.FLOAT); }
+"boolean" 		{ return symbol(ClassSymbol.TYPESIMPLE, IdType.BOOLEAN); }
+"string" 		{ return symbol(ClassSymbol.TYPESIMPLE, IdType.STRING); }
 
-"true" { return symbol(ClassSymbol.TRUE); }
-"false" { return symbol(ClassSymbol.FALSE); }
-"null" { return symbol(ClassSymbol.NULL); }
+"true" 			{ return symbol(ClassSymbol.TRUE); }
+"false" 		{ return symbol(ClassSymbol.FALSE); }
+"null" 			{ return symbol(ClassSymbol.NULL); }
 
-"list of" { return symbol(ClassSymbol.LISTOF); }
-"static" { return symbol(ClassSymbol.STATIC); }
-"structure" { return symbol(ClassSymbol.STRUCTURE); }
-"type" { return symbol(ClassSymbol.TYPE); }
+"list of" 		{ return symbol(ClassSymbol.LISTOF); }
+"static" 		{ return symbol(ClassSymbol.STATIC); }
+"structure" 	{ return symbol(ClassSymbol.STRUCTURE); }
+"type" 			{ return symbol(ClassSymbol.TYPE); }
 
-"class" { return symbol(ClassSymbol.CLASS); }
-"function" { return symbol(ClassSymbol.FUNCTION); }
-"procedure" { return symbol(ClassSymbol.PROCEDURE); }
+"class" 		{ return symbol(ClassSymbol.CLASS); }
+"function" 		{ return symbol(ClassSymbol.FUNCTION); }
+"procedure" 	{ return symbol(ClassSymbol.PROCEDURE); }
 
-"break" { return symbol(ClassSymbol.BREAK); }
-"stop" { return symbol(ClassSymbol.STOP); }
-"return" { return symbol(ClassSymbol.RETURN); }
+"break" 		{ return symbol(ClassSymbol.BREAK); }
+"stop" 			{ return symbol(ClassSymbol.STOP); }
+"return" 		{ return symbol(ClassSymbol.RETURN); }
 
-"foreach" { return symbol(ClassSymbol.FOREACH); }
-"in" { return symbol(ClassSymbol.IN); }
-"while" { return symbol(ClassSymbol.WHILE); }
-"repeat" { return symbol(ClassSymbol.REPEAT); }
-"if" { return symbol(ClassSymbol.IF); }
-"else" { return symbol(ClassSymbol.ELSE); }
+"foreach" 		{ return symbol(ClassSymbol.FOREACH); }
+"in" 			{ return symbol(ClassSymbol.IN); }
+"while" 		{ return symbol(ClassSymbol.WHILE); }
+"repeat" 		{ return symbol(ClassSymbol.REPEAT); }
+"if" 			{ return symbol(ClassSymbol.IF); }
+"else" 			{ return symbol(ClassSymbol.ELSE); }
 
 {identificateur} { System.out.println("id : "+yytext()); return symbol(ClassSymbol.IDENTIFICATEUR, yytext()); }
 
-{caractere} { return symbol(ClassSymbol.CARACTERE, yytext());}
-{entier} { return symbol(ClassSymbol.ENTIER, Integer.parseInt(yytext())); }
-{virgule_flottante} {return symbol(ClassSymbol.VIRGULE_FLOTTANTE);}
-{whitespace} {}
+{caractere} 	{ return symbol(ClassSymbol.CARACTERE, yytext());}
+{entier} 		{ System.out.println("entier"); return symbol(ClassSymbol.ENTIER, Integer.parseInt(yytext())); }
+{virgule_flottante} { return symbol(ClassSymbol.VIRGULE_FLOTTANTE);}
+{whitespace} 	{}
 
-";"				{ System.out.println("PV "); return symbol(ClassSymbol.POINT_VIRGULE); }
+";"				{ System.out.println("POINT_VIRGULE "); return symbol(ClassSymbol.POINT_VIRGULE); }
 "{"				{ System.out.println("accolade ouvrante"); return symbol(ClassSymbol.ACCOLADE_OUVRANTE); }
 "}"				{ return symbol(ClassSymbol.ACCOLADE_FERMANTE); }
-","				{ return symbol(ClassSymbol.VIRGULE); }
-":"				{ System.out.println("DP "); return symbol(ClassSymbol.DEUX_POINT); }
-"="				{ return symbol(ClassSymbol.EGAL); }
+","				{ System.out.println("virgule"); return symbol(ClassSymbol.VIRGULE); }
+":"				{ System.out.println("DEUX_POINT "); return symbol(ClassSymbol.DEUX_POINT); }
+"="				{ System.out.println("EGAL "); return symbol(ClassSymbol.EGAL); }
 "("				{ System.out.println("parenthese ouvrante"); return symbol(ClassSymbol.PARENTHESE_OUVRANTE); }
 ")"				{ System.out.println("parenthese fermante"); return symbol(ClassSymbol.PARENTHESE_FERMANTE); }
-"["				{ return symbol(ClassSymbol.CROCHET_OUVRANT); }
-"]"				{ return symbol(ClassSymbol.CROCHET_FERMANT); }
+"["				{ System.out.println("crochet ouvrant "); return symbol(ClassSymbol.CROCHET_OUVRANT); }
+"]"				{ System.out.println("crochet fermant "); return symbol(ClassSymbol.CROCHET_FERMANT); }
 "!"				{ return symbol(ClassSymbol.EXCLAMATION); }
 "~"				{ return symbol(ClassSymbol.TILDE); }
 "-"				{ return symbol(ClassSymbol.CADRATIN); }
@@ -109,18 +109,18 @@ whitespace = [ \t\v\n\f]
 ">"				{ return symbol(ClassSymbol.CHEVRON_SUPERIEUR); }
 "^"				{ return symbol(ClassSymbol.CIRCONFLEXE); }
 
-"+="				{ return symbol(ClassSymbol.ADD_ASSIGN); }
-"-="				{ return symbol(ClassSymbol.SUB_ASSIGN); }
-"*="				{ return symbol(ClassSymbol.MUL_ASSIGN); }
-"/="				{ return symbol(ClassSymbol.DIV_ASSIGN); }
-"%="				{ return symbol(ClassSymbol.MOD_ASSIGN); }
-"++"				{ return symbol(ClassSymbol.INC_OP); }
-"--"				{ return symbol(ClassSymbol.DEC_OP); }
-"&&"				{ return symbol(ClassSymbol.AND_OP); }
-"||"				{ return symbol(ClassSymbol.OR_OP); }
-"<="				{ return symbol(ClassSymbol.LE_OP); }
-">="				{ return symbol(ClassSymbol.GE_OP); }
-"=="				{ return symbol(ClassSymbol.EQ_OP); }
-"!="				{ return symbol(ClassSymbol.NE_OP); }
+"+="			{ return symbol(ClassSymbol.ADD_ASSIGN); }
+"-="			{ return symbol(ClassSymbol.SUB_ASSIGN); }
+"*="			{ return symbol(ClassSymbol.MUL_ASSIGN); }
+"/="			{ return symbol(ClassSymbol.DIV_ASSIGN); }
+"%="			{ return symbol(ClassSymbol.MOD_ASSIGN); }
+"++"			{ return symbol(ClassSymbol.INC_OP); }
+"--"			{ return symbol(ClassSymbol.DEC_OP); }
+"&&"			{ return symbol(ClassSymbol.AND_OP); }
+"||"			{ return symbol(ClassSymbol.OR_OP); }
+"<="			{ return symbol(ClassSymbol.LE_OP); }
+">="			{ return symbol(ClassSymbol.GE_OP); }
+"=="			{ return symbol(ClassSymbol.EQ_OP); }
+"!="			{ return symbol(ClassSymbol.NE_OP); }
 
 . { System.out.println("error : unknow token "+ yytext() +". line:"+yyline+", column:"+yycolumn); }

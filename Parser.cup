@@ -3,6 +3,16 @@ import java_cup.runtime.*;
 import java.util.Vector;
 import java.io.*;
 
+parser code {:
+
+public void report_error(Symbol cur_token);
+
+public void report_error(Symbol cur_token){
+    System.out.println("Error rencontrée pour le token :"+cur_token+" rencontré à la ligne "+cur_token.left+" et colonne "+cur_token.right+".");
+}
+
+:}
+
 //valeurs des variables
 terminal IdType TYPESIMPLE;
 terminal STRING_LITERAL;
@@ -119,7 +129,6 @@ precedence left ADD_ASSIGN, MUL_ASSIGN, TYPESIMPLE, STRING_LITERAL, CARACTERE, E
 precedence right CIRCONFLEXE;
 
 
-
 start with declaration_class;
 
 declaration_class ::= CLASS IDENTIFICATEUR ACCOLADE_OUVRANTE list_intraclasse ACCOLADE_FERMANTE {: System.out.println("compilation terminée."); :} 
@@ -154,8 +163,8 @@ list_declaration_variable ::= list_declaration_variable declaration_variable
     | declaration_variable
     ;
 
-list_declaration_argument ::= IDENTIFICATEUR {: System.out.println("test ds arg"); :} DEUX_POINT type
-    | list_declaration_argument VIRGULE {: System.out.println("test ds list_arg"); :} IDENTIFICATEUR DEUX_POINT type
+list_declaration_argument ::= IDENTIFICATEUR DEUX_POINT type
+    | list_declaration_argument VIRGULE IDENTIFICATEUR DEUX_POINT type
     |
     ;
 
@@ -166,6 +175,7 @@ definition_intraclasse ::= TILDE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declara
     ;
 
 integer_list ::= integer_list VIRGULE ENTIER
+    | ENTIER
     | 
     ;
 
@@ -208,6 +218,8 @@ affectation_variable ::= IDENTIFICATEUR EGAL valeur POINT_VIRGULE
     | IDENTIFICATEUR EGAL operation_binaire POINT_VIRGULE
     | IDENTIFICATEUR EGAL operation_unaire POINT_VIRGULE
     | IDENTIFICATEUR EGAL IDENTIFICATEUR PARENTHESE_OUVRANTE list_valeur PARENTHESE_FERMANTE POINT_VIRGULE
+    | IDENTIFICATEUR CROCHET_OUVRANT valeur CROCHET_FERMANT EGAL valeur POINT_VIRGULE 
+    | CIRCONFLEXE IDENTIFICATEUR EGAL valeur POINT_VIRGULE
     ;
 
 if ::= IF boolean_expression ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
@@ -262,7 +274,7 @@ operation_unaire ::= valeur INC_OP
     ;
     
 list_valeur ::= list_valeur VIRGULE valeur
-	| valeur 
+	| valeur
 	| 
 	;
 
@@ -274,6 +286,8 @@ valeur ::= TRUE
     | ENTIER
     | VIRGULE_FLOTTANTE
     | STRING_LITERAL
+    | IDENTIFICATEUR CROCHET_OUVRANT IDENTIFICATEUR CROCHET_FERMANT
+    | IDENTIFICATEUR CROCHET_OUVRANT valeur CROCHET_FERMANT
     | tableau
     | operation_binaire
     | PARENTHESE_OUVRANTE valeur PARENTHESE_FERMANTE
