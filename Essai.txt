@@ -4,7 +4,7 @@ class tutu{
 	nom: string;
 	age: integer;
 	
-	//f(a); //ERREUR qui va continuer
+	f(a); //ERREUR qui va continuer
 
 	type test = structure {
 		test1 : string;
@@ -15,7 +15,9 @@ class tutu{
 	genre bcp bcp */
 	//commentaire tralala
 
-	procedure fiche( tutu: string){
+	; //ERREUR
+
+	procedure fiche( tutu: string,){ //ERREUR
 		nom = "";
 		age = 0;
 	}

@@ -66,7 +66,7 @@ whitespace = [ \t\v\n\f]
 "if" 			{ return symbol(ClassSymbol.IF); }
 "else" 			{ return symbol(ClassSymbol.ELSE); }
 
-{identificateur} { return symbol(ClassSymbol.IDENTIFICATEUR, yytext()); }
+{identificateur} { System.out.println("identificateur : "+yytext()); return symbol(ClassSymbol.IDENTIFICATEUR, yytext()); }
 
 {caractere} 	{ return symbol(ClassSymbol.CARACTERE, yytext());}
 {entier} 		{ return symbol(ClassSymbol.ENTIER, Integer.parseInt(yytext())); }
@@ -93,6 +93,7 @@ whitespace = [ \t\v\n\f]
 "<"				{ return symbol(ClassSymbol.CHEVRON_INFERIEUR); }
 ">"				{ return symbol(ClassSymbol.CHEVRON_SUPERIEUR); }
 "^"				{ return symbol(ClassSymbol.CIRCONFLEXE); }
+"."				{ return symbol(ClassSymbol.POINT); }
 
 "+="			{ return symbol(ClassSymbol.ADD_ASSIGN); }
 "-="			{ return symbol(ClassSymbol.SUB_ASSIGN); }

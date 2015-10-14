@@ -66,6 +66,7 @@ terminal POURCENT;
 terminal CHEVRON_INFERIEUR;
 terminal CHEVRON_SUPERIEUR;
 terminal CIRCONFLEXE;
+terminal POINT;
 
 
 //Operateurs
@@ -93,6 +94,7 @@ non terminal definition_intraclasse;
 non terminal declaration_variable;
 non terminal list_declaration_variable;
 non terminal list_declaration_argument;
+non terminal list_declaration_argument_in;
 
 non terminal affectation_variable;
 non terminal affectation_tableau;
@@ -116,6 +118,7 @@ non terminal operation_unaire;
 
 non terminal valeur;
 non terminal list_valeur;
+non terminal list_valeur_in;
 non terminal integer_list;
 non terminal tableau;
 non terminal valeur_boolean;
@@ -170,9 +173,12 @@ list_declaration_variable ::= list_declaration_variable declaration_variable
     | declaration_variable
     ;
 
-list_declaration_argument ::= IDENTIFICATEUR DEUX_POINT type
-    | list_declaration_argument VIRGULE IDENTIFICATEUR DEUX_POINT type
+list_declaration_argument ::= list_declaration_argument_in
     |
+    ;
+
+list_declaration_argument_in ::= IDENTIFICATEUR DEUX_POINT type
+    | list_declaration_argument_in VIRGULE IDENTIFICATEUR DEUX_POINT type
     ;
 
 definition_intraclasse ::= TILDE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
@@ -278,10 +284,13 @@ operation_unaire ::= valeur INC_OP
     | PLUS valeur
     | CADRATIN valeur
     ;
+
+list_valeur ::= list_valeur_in
+    |
+    ;
     
-list_valeur ::= list_valeur VIRGULE valeur
+list_valeur_in ::= list_valeur_in VIRGULE valeur
 	| valeur
-	| 
     | error valeur
 	;
 
