@@ -137,7 +137,7 @@ precedence right STATIC, STRUCTURE, TYPE, CLASS, FUNCTION, PROCEDURE, FOREACH, I
 
 start with declaration_class;
 
-declaration_class ::= CLASS IDENTIFICATEUR ACCOLADE_OUVRANTE list_intraclasse ACCOLADE_FERMANTE {: System.out.println("compilation terminée."); :} 
+declaration_class ::= CLASS IDENTIFICATEUR ACCOLADE_OUVRANTE list_intraclasse ACCOLADE_FERMANTE {: System.out.println("Compilation terminée."); :}
     |
     ;
 

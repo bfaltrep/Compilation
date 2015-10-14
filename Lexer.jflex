@@ -18,21 +18,6 @@ private Symbol symbol (int type, Object value) {
         return new Symbol (type, yyline, yycolumn, value);
 }
 
-/*
-	symboles non utilisés
-"?"				{ return symbol(ClassSymbol.INTERROGATION); }
-"->"				{ return symbol(ClassSymbol.PTR_OP); }
-"..."				{ return symbol(ClassSymbol.ELLIPSIS); }
-"."				{ return symbol(ClassSymbol.POINT); }
-
-">>"				{ return symbol(ClassSymbol.RIGHT_OP); }
-"<<"				{ return symbol(ClassSymbol.LEFT_OP); }
-
-"|"				{ return symbol(ClassSymbol.PIPE); }
-"&"				{ return symbol(ClassSymbol.ESPERLUETTTE); }
-
-*/
-
 %}
 
 entier = [0-9]+
@@ -45,9 +30,9 @@ caractere = "0x"[0-9][0-9A-Fa-f]|'\''[.]?'\''
 whitespace = [ \t\v\n\f]
 %%
 
-"/*" ~"*/" 		{ System.out.println("commentaire"); }
+"/*" ~"*/" 		{}
 
-"//" ~\n 		{ System.out.println("commentaire_l"); }
+"//" ~\n 		{}
 
 [\"] ~[\"] 		{ return symbol(ClassSymbol.STRING_LITERAL, yytext()); }
 
@@ -81,23 +66,23 @@ whitespace = [ \t\v\n\f]
 "if" 			{ return symbol(ClassSymbol.IF); }
 "else" 			{ return symbol(ClassSymbol.ELSE); }
 
-{identificateur} { System.out.println("id : "+yytext()); return symbol(ClassSymbol.IDENTIFICATEUR, yytext()); }
+{identificateur} { return symbol(ClassSymbol.IDENTIFICATEUR, yytext()); }
 
 {caractere} 	{ return symbol(ClassSymbol.CARACTERE, yytext());}
-{entier} 		{ System.out.println("entier"); return symbol(ClassSymbol.ENTIER, Integer.parseInt(yytext())); }
+{entier} 		{ return symbol(ClassSymbol.ENTIER, Integer.parseInt(yytext())); }
 {virgule_flottante} { return symbol(ClassSymbol.VIRGULE_FLOTTANTE);}
 {whitespace} 	{}
 
-";"				{ System.out.println("POINT_VIRGULE "); return symbol(ClassSymbol.POINT_VIRGULE); }
-"{"				{ System.out.println("accolade ouvrante"); return symbol(ClassSymbol.ACCOLADE_OUVRANTE); }
+";"				{ return symbol(ClassSymbol.POINT_VIRGULE); }
+"{"				{ return symbol(ClassSymbol.ACCOLADE_OUVRANTE); }
 "}"				{ return symbol(ClassSymbol.ACCOLADE_FERMANTE); }
-","				{ System.out.println("virgule"); return symbol(ClassSymbol.VIRGULE); }
-":"				{ System.out.println("DEUX_POINT "); return symbol(ClassSymbol.DEUX_POINT); }
-"="				{ System.out.println("EGAL "); return symbol(ClassSymbol.EGAL); }
-"("				{ System.out.println("parenthese ouvrante"); return symbol(ClassSymbol.PARENTHESE_OUVRANTE); }
-")"				{ System.out.println("parenthese fermante"); return symbol(ClassSymbol.PARENTHESE_FERMANTE); }
-"["				{ System.out.println("crochet ouvrant "); return symbol(ClassSymbol.CROCHET_OUVRANT); }
-"]"				{ System.out.println("crochet fermant "); return symbol(ClassSymbol.CROCHET_FERMANT); }
+","				{ return symbol(ClassSymbol.VIRGULE); }
+":"				{ return symbol(ClassSymbol.DEUX_POINT); }
+"="				{ return symbol(ClassSymbol.EGAL); }
+"("				{ return symbol(ClassSymbol.PARENTHESE_OUVRANTE); }
+")"				{ return symbol(ClassSymbol.PARENTHESE_FERMANTE); }
+"["				{ return symbol(ClassSymbol.CROCHET_OUVRANT); }
+"]"				{ return symbol(ClassSymbol.CROCHET_FERMANT); }
 "!"				{ return symbol(ClassSymbol.EXCLAMATION); }
 "~"				{ return symbol(ClassSymbol.TILDE); }
 "-"				{ return symbol(ClassSymbol.CADRATIN); }
@@ -123,4 +108,4 @@ whitespace = [ \t\v\n\f]
 "=="			{ return symbol(ClassSymbol.EQ_OP); }
 "!="			{ return symbol(ClassSymbol.NE_OP); }
 
-. { System.out.println("error : unknow token "+ yytext() +". line:"+yyline+", column:"+yycolumn); }
+. { System.out.println("error : token inconnu : "+ yytext() +". line:"+yyline+", column:"+yycolumn); }

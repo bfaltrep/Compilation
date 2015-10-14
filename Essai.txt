@@ -4,11 +4,11 @@ class tutu{
 	nom: string;
 	age: integer;
 	
-	f(a);
+	//f(a); //ERREUR qui va continuer
 
 	type test = structure {
 		test1 : string;
-		test2 : list of; //ERREUR, mais continue la compilation après le ;
+		test2 : integer;
 	}
 
 	/* je commente bcp
@@ -19,8 +19,6 @@ class tutu{
 		nom = "";
 		age = 0;
 	}
-
-	test test
 
 	procedure fiche2(){
 		nom = "";
@@ -39,7 +37,5 @@ class tutu{
 	function getNom(): string{
 		return nom;
 	}
-
-
 
 }
