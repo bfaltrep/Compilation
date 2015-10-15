@@ -1,4 +1,4 @@
-class tutu{
+class fiche{
 	monTableau: list of client;
 	static id: integer;
 	nom: string;
@@ -14,24 +14,22 @@ class tutu{
 	/* je commente bcp
 	genre bcp bcp */
 	//commentaire tralala
-
-	; //ERREUR
-
+	
 	procedure fiche( tutu: string,){ //ERREUR
 		nom = "";
 		age = 0;
 	}
 
-	procedure fiche2(){
+	procedure fiche2(, lola : string){ //ERREUR
 		nom = "";
 		age = 0;
 	}
 
 	~fiche(){
-		t1: list of integer;
+		t2: list of integer;
 		t2 = [1, 3];
-		foreach i  in [0, 1, 2, 3, 4]{
-			afficher(t[i]);
+		foreach i in t2{
+			afficher(t2[i]);
 		}
 		t2[1] = 3;
 	}

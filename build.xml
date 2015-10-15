@@ -12,8 +12,7 @@ Lionel
   <property name="CUPLib" location="lib"/>
   <property name="lib.dir" location="lib"/>
   <property name="bin.dir" location="bin"/>
-<!--   <property name="parser.dir" location="parser"/>
-  <property name="lexer.dir" location="lexer"/> -->
+  <property name="src.dir" location="src"/>
   
   <description>
     compilation du projet Lexer
@@ -23,19 +22,19 @@ Lionel
        target: default              
        =================================
   -->
-  <target name="default" depends="projet" description="compilation du projet">
+  <target name="default" depends="projet" description="Execution du projet">
     <java classname="Main" classpath=".:${bin.dir}:${lib.dir}/java-cup-11a-runtime.jar" output="Output.txt">
       <arg value="Essai.txt"/>
     </java>
   </target>
   
     <!-- ================================= 
-       target: calc              
+       target: projet           
        =================================
     -->
     <target name="projet" depends="parser, lexer" description="compilation du projet">
       <mkdir dir="${bin.dir}"/>
-      <javac destdir="${bin.dir}" srcdir="." classpath="${lib.dir}/java-cup-11a-runtime.jar" debug="on"/>
+      <javac destdir="${bin.dir}" srcdir=".:${src.dir}" classpath="${lib.dir}/java-cup-11a-runtime.jar" debug="on"/>
     </target>
     
   <!-- =================================
@@ -46,7 +45,7 @@ Lionel
     <taskdef name="jflex" classname="JFlex.anttask.JFlexTask">
       <classpath location="${JFlexLib}/JFlex.jar"/>
     </taskdef>
-    <jflex file="Lexer.jflex" destdir="."/>
+    <jflex file="Lexer.jflex" destdir="${src.dir}"/>
   </target>
   
   <!-- ================================= 
@@ -57,7 +56,7 @@ Lionel
     <taskdef name="cup" classname="java_cup.anttask.CUPTask">
       <classpath location="${CUPLib}/java-cup-11a.jar"/>
     </taskdef>
-    <cup srcfile="Parser.cup" destdir="." parser="Parser" symbols="ClassSymbol" dump_grammar="true"/>
+    <cup srcfile="Parser.cup" destdir="${src.dir}" parser="Parser" symbols="ClassSymbol" dump_grammar="true"/>
   </target>
   
   <!-- ================================= 
@@ -67,9 +66,9 @@ Lionel
   <target name="clean" description="supprimer les fichiers générés durant la compilation">
       	<delete dir="bin"/>
       	<delete file="Output.txt"/>
-        <delete file="ClassSymbol.java"/>
-        <delete file="Lexer.java"/>
-        <delete file="Parser.java"/>
+        <delete file="${src.dir}/ClassSymbol.java"/>
+        <delete file="${src.dir}/Lexer.java"/>
+        <delete file="${src.dir}/Parser.java"/>
   </target>
   
     <!-- ================================= 

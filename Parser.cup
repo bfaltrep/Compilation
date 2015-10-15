@@ -68,7 +68,6 @@ terminal CHEVRON_SUPERIEUR;
 terminal CIRCONFLEXE;
 terminal POINT;
 
-
 //Operateurs
 terminal ADD_ASSIGN;
 terminal SUB_ASSIGN;
@@ -97,8 +96,6 @@ non terminal list_declaration_argument;
 non terminal list_declaration_argument_in;
 
 non terminal affectation_variable;
-non terminal affectation_tableau;
-
 non terminal type;
 non terminal type_complexe;
 non terminal structure;
@@ -116,14 +113,14 @@ non terminal operation_binaire;
 non terminal operation_binaire_assign;
 non terminal operation_unaire;
 
-non terminal valeur;
+non terminal indice;
 non terminal list_valeur;
 non terminal list_valeur_in;
-non terminal integer_list;
 non terminal tableau;
+non terminal valeur;
+non terminal valeur_simple;
 non terminal valeur_boolean;
 non terminal valeur_tableau_imbrique;
-non terminal valeur_tableau_crochet;
 
 non terminal if;
 non terminal else;
@@ -189,14 +186,6 @@ definition_intraclasse ::= TILDE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declara
     | STATIC PROCEDURE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
     ;
 
-integer_list ::= integer_list VIRGULE ENTIER
-    | ENTIER
-    | 
-    ;
-
-tableau ::= CROCHET_OUVRANT integer_list CROCHET_FERMANT
-    ;
-
 and ::= valeur AND_OP valeur
     ;
 
@@ -220,20 +209,20 @@ compare_expression ::= valeur CHEVRON_INFERIEUR valeur
     | valeur NE_OP valeur
     ;
 
-boolean_expression ::= PARENTHESE_OUVRANTE boolean_expression PARENTHESE_FERMANTE
-    | logical_expression 
+boolean_expression ::= logical_expression 
     | compare_expression
+    | error PARENTHESE_FERMANTE
     ;
       
 affectation_variable ::= IDENTIFICATEUR EGAL valeur POINT_VIRGULE
     | IDENTIFICATEUR EGAL operation_binaire POINT_VIRGULE
     | IDENTIFICATEUR EGAL operation_unaire POINT_VIRGULE
     | IDENTIFICATEUR EGAL IDENTIFICATEUR PARENTHESE_OUVRANTE list_valeur PARENTHESE_FERMANTE POINT_VIRGULE
-    | IDENTIFICATEUR CROCHET_OUVRANT valeur CROCHET_FERMANT EGAL valeur POINT_VIRGULE 
+    | IDENTIFICATEUR CROCHET_OUVRANT indice CROCHET_FERMANT EGAL valeur POINT_VIRGULE 
     | CIRCONFLEXE IDENTIFICATEUR EGAL valeur POINT_VIRGULE
     ;
 
-if ::= IF boolean_expression ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
+if ::= IF PARENTHESE_OUVRANTE boolean_expression PARENTHESE_FERMANTE ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
 	;
 
 else ::= ELSE ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
@@ -244,17 +233,17 @@ list_instruction ::= instruction
     | list_instruction instruction
     |
     | error instruction
+    | error ACCOLADE_FERMANTE
     ;
 
 instruction ::= declaration_variable
     | affectation_variable
-    | affectation_tableau
     | IDENTIFICATEUR PARENTHESE_OUVRANTE list_valeur PARENTHESE_FERMANTE POINT_VIRGULE
     | operation_binaire_assign POINT_VIRGULE
     | operation_unaire POINT_VIRGULE
-    | FOREACH IDENTIFICATEUR IN tableau ACCOLADE_OUVRANTE instruction ACCOLADE_FERMANTE
-    | WHILE boolean_expression ACCOLADE_OUVRANTE instruction ACCOLADE_FERMANTE
-    | REPEAT ACCOLADE_OUVRANTE instruction ACCOLADE_FERMANTE WHILE boolean_expression
+    | FOREACH IDENTIFICATEUR IN IDENTIFICATEUR ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
+    | WHILE PARENTHESE_OUVRANTE boolean_expression PARENTHESE_FERMANTE ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
+    | REPEAT ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE WHILE PARENTHESE_OUVRANTE boolean_expression PARENTHESE_FERMANTE
     | if
     | else
     | RETURN POINT_VIRGULE
@@ -268,6 +257,8 @@ operation_binaire ::= valeur POURCENT valeur
     | valeur PLUS valeur
     | valeur ETOILE valeur
     | valeur BARRE_OBLIQUE valeur
+    | error POINT_VIRGULE
+    | error PARENTHESE_FERMANTE
     ;
 
 operation_binaire_assign ::= valeur ADD_ASSIGN valeur 
@@ -285,8 +276,16 @@ operation_unaire ::= valeur INC_OP
     | CADRATIN valeur
     ;
 
+tableau ::= CROCHET_OUVRANT list_valeur CROCHET_FERMANT
+    ;
+
+indice ::= ENTIER
+    | IDENTIFICATEUR
+    ;
+
 list_valeur ::= list_valeur_in
     |
+    | error CROCHET_FERMANT
     ;
     
 list_valeur_in ::= list_valeur_in VIRGULE valeur
@@ -297,13 +296,16 @@ list_valeur_in ::= list_valeur_in VIRGULE valeur
 valeur ::= valeur_boolean
     | IDENTIFICATEUR valeur_tableau_imbrique
     | IDENTIFICATEUR
-    | CARACTERE
+    | valeur_simple
+    | PARENTHESE_OUVRANTE valeur PARENTHESE_FERMANTE
+    | tableau
+    | IDENTIFICATEUR POINT IDENTIFICATEUR
+    ;
+
+valeur_simple ::= CARACTERE
     | ENTIER
     | VIRGULE_FLOTTANTE
     | STRING_LITERAL
-    | tableau
-    | operation_binaire
-    | PARENTHESE_OUVRANTE valeur PARENTHESE_FERMANTE
     ;
 
 valeur_boolean ::= TRUE
@@ -311,12 +313,8 @@ valeur_boolean ::= TRUE
     | NULL  
     ;  
 
-valeur_tableau_crochet ::= CROCHET_OUVRANT IDENTIFICATEUR CROCHET_FERMANT
-    | CROCHET_OUVRANT valeur CROCHET_FERMANT
-    ;
-
-valeur_tableau_imbrique ::= valeur_tableau_crochet
-    | valeur_tableau_imbrique valeur_tableau_crochet
+valeur_tableau_imbrique ::= CROCHET_OUVRANT indice CROCHET_FERMANT
+    | valeur_tableau_imbrique CROCHET_OUVRANT indice CROCHET_FERMANT
     ;
 
 type ::= TYPESIMPLE
@@ -329,5 +327,6 @@ type_complexe ::= LISTOF type
     | structure
     | CLASS ACCOLADE_OUVRANTE list_intraclasse ACCOLADE_FERMANTE
     | error POINT_VIRGULE
+    | error ACCOLADE_OUVRANTE
     ;
 
