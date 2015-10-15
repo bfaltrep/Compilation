@@ -14,7 +14,7 @@ class fiche{
 	/* je commente bcp
 	genre bcp bcp */
 	//commentaire tralala
-	
+
 	procedure fiche( tutu: string,){ //ERREUR
 		nom = "";
 		age = 0;

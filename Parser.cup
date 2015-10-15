@@ -4,10 +4,12 @@ import java.util.Vector;
 import java.io.*;
 
 parser code {:
-public void syntax_error(Symbol cur_token){
-    //nous avons pris ligne +1 pour que ca corresponde a l'affichage des éditeurs de texte qui commencent souvent à la ligne 1 et non 0.
-    System.out.println("Erreur rencontrée pour le token "+cur_token.sym+" rencontré à la ligne "+(cur_token.left+1)+" et colonne "+cur_token.right+".");
-}
+    public Environment environmentGlobal;
+
+    public void syntax_error(Symbol cur_token){
+        //nous avons pris ligne +1 pour que ca corresponde a l'affichage des éditeurs de texte qui commencent souvent à la ligne 1 et non 0.
+        System.out.println("Erreur rencontrée pour le token "+cur_token.sym+" rencontré à la ligne "+(cur_token.left+1)+" et colonne "+cur_token.right+".");
+    }
 
 :}
 
@@ -154,7 +156,7 @@ intraclasse ::= definition_intraclasse
 declaration_intraclasse ::= STATIC FUNCTION IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE DEUX_POINT type POINT_VIRGULE
     | FUNCTION IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE DEUX_POINT type POINT_VIRGULE
     | STATIC PROCEDURE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE POINT_VIRGULE
-    | PROCEDURE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE POINT_VIRGULE
+    | PROCEDURE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE POINT_VIRGULE 
     | list_declaration_variable
     | TYPE IDENTIFICATEUR EGAL structure POINT_VIRGULE
     ;

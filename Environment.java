@@ -1,15 +1,15 @@
 package Compilation;
 
 public class Environment {
-	private TreeSet tree;
+	/*private Variable<String, String> tree;
 	private Environment last;
 
 	public Environment(){
-		tree = new TreeSet();
+		tree = new Variable
 	}
 
 	public void addVariable(){
-		
-	}
 
+	}
+*/
 }
