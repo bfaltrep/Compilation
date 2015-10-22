@@ -20,7 +20,8 @@ public class TypeAutorise{
 		}
 	}
 
-	private List<Entity> type_autorise;
+	private List<Entity> type_autorise; // passer a un set ? plus cohérent il me semble
+
 
 	public TypeAutorise(){
 		type_autorise = new ArrayList<Entity>();
@@ -29,5 +30,19 @@ public class TypeAutorise{
 		type_autorise.add(2,"Float");
 		type_autorise.add(3,"Boolean");
 		type_autorise.add(4,"String");
+		type_autorise.add(5,"tableau");
+		type_autorise.add(6,"pointeur");
+		//error ??
 	}
+
+	public void add(String s){
+		//on vérifie qu'il n'y est pas déja présent
+		ListIterator<Entity> it = new ListIterator<Entity>();
+		if()
+
+
+
+		type_autorise.add(type_autorise.size(), s);
+	}
+
 }
