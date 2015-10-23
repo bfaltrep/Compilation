@@ -9,7 +9,7 @@ import java_cup.runtime.*;
 %cup
 
 %{
-
+//aloa
 private Symbol symbol (int type) {
         return new Symbol (type, yyline, yycolumn);
 }
