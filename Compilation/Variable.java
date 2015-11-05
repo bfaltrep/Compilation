@@ -6,10 +6,10 @@ import java.util.ArrayList;
 public class Variable{
 
 	private String name;
-	private int type;
+	private TreeNode type;
 	//private int memoire_allouee;
 
-	public Variable(String _name, int _type){
+	public Variable(String _name, TreeNode _type){
 		name = _name;
 		type = _type;
 		//memoire_allouee = _memoire_allouee;
@@ -23,7 +23,7 @@ public class Variable{
 		return name;
 	}
 
-	public int getType(){
+	public TreeNode getType(){
 		return type;
 	}
 /*

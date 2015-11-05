@@ -84,8 +84,15 @@ public class TypeAutorise{
 		return -1;
 	}
 
-	public int getId(int id){
-		return id;
+	public String getString(int id){
+		Iterator<Entity> it = type_autorise.iterator();
+		while(it.hasNext()){
+			Entity e = it.next();
+			if(e.getId().equals(id)){
+				return e.getNom();
+			}
+		}
+		return null;
 	}
 
 	public boolean isAutorised(int id){
