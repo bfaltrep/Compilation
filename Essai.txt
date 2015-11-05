@@ -3,26 +3,31 @@ class fiche{
 	static id: integer;
 	nom: string;
 	age: integer;
-	
-	f(a); //ERREUR qui va continuer
+
+	class deuxentier{
+		entier1 : integer;
+		entier2 : integer;
+		entier1 = entier2;
+	}
+
 
 	type test = structure {
 		test1 : string;
 		test2 : integer;
-	}
+	};
 
 	/* je commente bcp
 	genre bcp bcp */
 	//commentaire tralala
 
-	procedure fiche( tutu: string,){ //ERREUR
-		nom = "";
-		age = 0;
+	procedure fiche( tutu: string){
+		nom2 = "test de \"string";
+		age2 = 0;
 	}
 
-	procedure fiche2(, lola : string){ //ERREUR
-		nom = "";
-		age = 0;
+	procedure fiche2(lola : string){
+		nom2 = "ceci est un nom";
+		age2 = 0;
 	}
 
 	~fiche(){

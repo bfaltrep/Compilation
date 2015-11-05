@@ -2,9 +2,19 @@
 import java_cup.runtime.*;
 import java.util.Vector;
 import java.io.*;
+import Compilation.*;
+
+action code {:
+    public Environment environmentGlobal;
+
+    public Symbol verificationType(Symbol t, TreeNode subvalue_expected){
+        
+    }
+
+
+:}
 
 parser code {:
-    public Environment environmentGlobal;
 
     public void syntax_error(Symbol cur_token){
         //nous avons pris ligne +1 pour que ca corresponde a l'affichage des éditeurs de texte qui commencent souvent à la ligne 1 et non 0.
@@ -88,6 +98,7 @@ terminal NE_OP;
 non terminal declaration_class;
 non terminal list_intraclasse;
 non terminal intraclasse;
+non terminal declaration_classe;
 
 non terminal declaration_intraclasse;
 non terminal definition_intraclasse;
@@ -127,6 +138,10 @@ non terminal valeur_tableau_imbrique;
 non terminal if;
 non terminal else;
 
+//non terminaux utiles à la création de l'arbre des environements
+non terminal accolade_o_environment;
+non terminal accolade_f_environment;
+
 precedence left ADD_ASSIGN, MUL_ASSIGN, CHEVRON_INFERIEUR, CHEVRON_SUPERIEUR, ADD_ASSIGN, SUB_ASSIGN, MUL_ASSIGN, DIV_ASSIGN, MOD_ASSIGN, INC_OP, DEC_OP, AND_OP, OR_OP, LE_OP, GE_OP, EQ_OP, NE_OP;
 precedence left TYPESIMPLE, STRING_LITERAL, CARACTERE, ENTIER, VIRGULE_FLOTTANTE, TRUE, FALSE, NULL, LISTOF, IDENTIFICATEUR;
 precedence left POINT_VIRGULE, ACCOLADE_FERMANTE, PARENTHESE_FERMANTE, CROCHET_FERMANT, EXCLAMATION, TILDE;
@@ -139,7 +154,7 @@ precedence right STATIC, STRUCTURE, TYPE, CLASS, FUNCTION, PROCEDURE, FOREACH, I
 
 start with declaration_class;
 
-declaration_class ::= CLASS IDENTIFICATEUR ACCOLADE_OUVRANTE list_intraclasse ACCOLADE_FERMANTE {: System.out.println("Compilation terminée."); :}
+declaration_class ::= CLASS IDENTIFICATEUR ACCOLADE_OUVRANTE {: /*creation du premier environement*/ environmentGlobal= new Environment(); :} list_intraclasse ACCOLADE_FERMANTE {: System.out.println(environmentGlobal.getId()); System.out.println("Compilation terminée."); :}
     |
     ;
 
@@ -151,6 +166,10 @@ list_intraclasse ::= list_intraclasse intraclasse
 
 intraclasse ::= definition_intraclasse
     | declaration_intraclasse
+    | declaration_classe
+    ;
+
+declaration_classe ::= CLASS IDENTIFICATEUR ACCOLADE_OUVRANTE list_intraclasse ACCOLADE_FERMANTE
     ;
 
 declaration_intraclasse ::= STATIC FUNCTION IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE DEUX_POINT type POINT_VIRGULE
@@ -161,10 +180,10 @@ declaration_intraclasse ::= STATIC FUNCTION IDENTIFICATEUR PARENTHESE_OUVRANTE l
     | TYPE IDENTIFICATEUR EGAL structure POINT_VIRGULE
     ;
 
-structure ::= STRUCTURE ACCOLADE_OUVRANTE list_declaration_variable ACCOLADE_FERMANTE 
+structure ::= STRUCTURE ACCOLADE_OUVRANTE list_declaration_variable ACCOLADE_FERMANTE {: :}
     ;
 
-declaration_variable ::= IDENTIFICATEUR DEUX_POINT type POINT_VIRGULE
+declaration_variable ::= IDENTIFICATEUR:nom DEUX_POINT type:t POINT_VIRGULE {: int v_type = getId(t); if(isAutorised(v_type)){environmentGlobal.add((String)nom,new Variable(nom, v_type));} :}
     | STATIC IDENTIFICATEUR DEUX_POINT type POINT_VIRGULE
     ;
 
@@ -180,12 +199,12 @@ list_declaration_argument_in ::= IDENTIFICATEUR DEUX_POINT type
     | list_declaration_argument_in VIRGULE IDENTIFICATEUR DEUX_POINT type
     ;
 
-definition_intraclasse ::= TILDE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
-    | IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
-    | FUNCTION IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE DEUX_POINT type ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
-    | STATIC FUNCTION IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE DEUX_POINT type ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
-    | PROCEDURE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
-    | STATIC PROCEDURE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
+definition_intraclasse ::= TILDE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE accolade_o_environment list_instruction accolade_f_environment
+    | IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE accolade_o_environment list_instruction accolade_f_environment
+    | FUNCTION IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE DEUX_POINT type accolade_o_environment list_instruction accolade_f_environment
+    | STATIC FUNCTION IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE DEUX_POINT type accolade_o_environment list_instruction accolade_f_environment
+    | PROCEDURE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE accolade_o_environment list_instruction accolade_f_environment
+    | STATIC PROCEDURE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE accolade_o_environment list_instruction accolade_f_environment
     ;
 
 and ::= valeur AND_OP valeur
@@ -224,10 +243,10 @@ affectation_variable ::= IDENTIFICATEUR EGAL valeur POINT_VIRGULE
     | CIRCONFLEXE IDENTIFICATEUR EGAL valeur POINT_VIRGULE
     ;
 
-if ::= IF PARENTHESE_OUVRANTE boolean_expression PARENTHESE_FERMANTE ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
+if ::= IF PARENTHESE_OUVRANTE boolean_expression PARENTHESE_FERMANTE accolade_o_environment list_instruction accolade_f_environment
 	;
 
-else ::= ELSE ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
+else ::= ELSE accolade_o_environment list_instruction accolade_f_environment
     | ELSE if 
     ;
 
@@ -243,9 +262,9 @@ instruction ::= declaration_variable
     | IDENTIFICATEUR PARENTHESE_OUVRANTE list_valeur PARENTHESE_FERMANTE POINT_VIRGULE
     | operation_binaire_assign POINT_VIRGULE
     | operation_unaire POINT_VIRGULE
-    | FOREACH IDENTIFICATEUR IN IDENTIFICATEUR ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
-    | WHILE PARENTHESE_OUVRANTE boolean_expression PARENTHESE_FERMANTE ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE
-    | REPEAT ACCOLADE_OUVRANTE list_instruction ACCOLADE_FERMANTE WHILE PARENTHESE_OUVRANTE boolean_expression PARENTHESE_FERMANTE
+    | FOREACH IDENTIFICATEUR IN IDENTIFICATEUR accolade_o_environment list_instruction accolade_f_environment
+    | WHILE PARENTHESE_OUVRANTE boolean_expression PARENTHESE_FERMANTE accolade_o_environment list_instruction accolade_f_environment
+    | REPEAT accolade_o_environment list_instruction accolade_f_environment WHILE PARENTHESE_OUVRANTE boolean_expression PARENTHESE_FERMANTE
     | if
     | else
     | RETURN POINT_VIRGULE
@@ -299,8 +318,8 @@ valeur ::= valeur_boolean
     | IDENTIFICATEUR valeur_tableau_imbrique
     | IDENTIFICATEUR
     | valeur_simple
-    | PARENTHESE_OUVRANTE valeur PARENTHESE_FERMANTE
-    | tableau
+    | PARENTHESE_OUVRANTE
+    | tableau 
     | IDENTIFICATEUR POINT IDENTIFICATEUR
     ;
 
@@ -312,23 +331,27 @@ valeur_simple ::= CARACTERE
 
 valeur_boolean ::= TRUE
     | FALSE
-    | NULL  
+    | NULL
     ;  
 
 valeur_tableau_imbrique ::= CROCHET_OUVRANT indice CROCHET_FERMANT
     | valeur_tableau_imbrique CROCHET_OUVRANT indice CROCHET_FERMANT
     ;
 
-type ::= TYPESIMPLE
-    | type_complexe
+type ::= TYPESIMPLE:t {: :}
+    | type_complexe:t {: :}
     ;
 
-type_complexe ::= LISTOF type
-    | LISTOF IDENTIFICATEUR
-    | CIRCONFLEXE type
-    | structure
-    | CLASS ACCOLADE_OUVRANTE list_intraclasse ACCOLADE_FERMANTE
+type_complexe ::= LISTOF:lo type:t {: :}
+    | LISTOF:lo IDENTIFICATEUR:t {: :}
+    | CIRCONFLEXE:c type:t {: :}
+    | structure:t {:  :}
     | error POINT_VIRGULE
     | error ACCOLADE_OUVRANTE
     ;
 
+accolade_o_environment ::= ACCOLADE_OUVRANTE {: environmentGlobal = new Environment(environmentGlobal); :}
+    ;
+
+accolade_f_environment ::= ACCOLADE_FERMANTE {: environmentGlobal = environmentGlobal.getPrev(); :}
+    ;

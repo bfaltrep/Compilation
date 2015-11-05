@@ -8,8 +8,10 @@ import java_cup.runtime.*;
 %cupsym ClassSymbol
 %cup
 
+%xstate STRING
+
 %{
-//aloa
+	
 private Symbol symbol (int type) {
         return new Symbol (type, yyline, yycolumn);
 }
@@ -18,23 +20,32 @@ private Symbol symbol (int type, Object value) {
         return new Symbol (type, yyline, yycolumn, value);
 }
 
-%}
+private StringBuffer string_literal;
 
-entier = [0-9]+
-puissance = ('e'[0-9]+)?
+%} 
+
+entier = [:digit:]+
+puissance = ('e'[:digit:]+)?
 virgule_flottante = entier('.'entier)?puissance|'.'entier.puissance
 
 identificateur = [a-zA-Z][a-zA-Z0-9_\-]*
 
-caractere = "0x"[0-9][0-9A-Fa-f]|'\''[.]?'\''
+caractere = "0x"[:digit:][0-9A-Fa-f]|'\''[.]?'\''
 whitespace = [ \t\v\n\f]
+
 %%
 
-"/*" ~"*/" 		{}
+"/*" ~"*/" 		{/*on retire les commentaires*/}
 
-"//" ~\n 		{}
+"//" ~\n 		{/*on retire les commentaires*/}
 
-[\"] ~[\"] 		{ return symbol(ClassSymbol.STRING_LITERAL, yytext()); }
+\"	 			{ yybegin(STRING); string_literal = new StringBuffer();}
+
+<STRING>\"	 	{ yybegin(YYINITIAL); return symbol(ClassSymbol.STRING_LITERAL, string_literal.toString()); }
+
+<STRING>\\\" 	|
+<STRING>.		|
+<STRING>\\n		{ string_literal.append(yytext()); }
 
 "integer" 		{ return symbol(ClassSymbol.TYPESIMPLE , IdType.INTEGER); }
 "character" 	{ return symbol(ClassSymbol.TYPESIMPLE, IdType.CHARACTER); }
@@ -66,7 +77,7 @@ whitespace = [ \t\v\n\f]
 "if" 			{ return symbol(ClassSymbol.IF); }
 "else" 			{ return symbol(ClassSymbol.ELSE); }
 
-{identificateur} { System.out.println("identificateur : "+yytext()); return symbol(ClassSymbol.IDENTIFICATEUR, yytext()); }
+{identificateur} { return symbol(ClassSymbol.IDENTIFICATEUR, yytext()); }
 
 {caractere} 	{ return symbol(ClassSymbol.CARACTERE, yytext());}
 {entier} 		{ return symbol(ClassSymbol.ENTIER, Integer.parseInt(yytext())); }
