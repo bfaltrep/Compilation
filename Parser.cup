@@ -8,10 +8,10 @@ action code {:
     public Environment environmentGlobal;
 
     public TreeNode traitementType(String t, TreeNode subvalue_expected){
-        if(isAutorised((Integer)t.getUserObject())){
+        if(TypeAutorise.isAutorised((Integer)t.getUserObject())){
             TreeNode node = new DefaultMutableTreeNode();
             node.add(t);
-            node.setUserObject(TypeAutorise.getId());
+            node.setUserObject(TypeAutorise.getId(t));
             return node;
         }
         else{
@@ -19,6 +19,16 @@ action code {:
         }
     }
 
+    /*
+        
+    */
+    public int setType(String s){
+        if(TypeAutorise.isAutorised(TypeAutorise.getId(s))){
+
+        }else{
+            
+        }
+    }
 
 :}
 
@@ -356,12 +366,9 @@ type ::= TYPESIMPLE:t {: RESULT = t;  :}
         :}
     ;
 
-type_complexe ::= LISTOF:lo type:t {:
-
-                RESULT = traitementType("listof",t);
-            :}
-    | LISTOF:lo IDENTIFICATEUR:t {: :}
-    | CIRCONFLEXE:c type:t {: :}
+type_complexe ::= LISTOF type:t {: RESULT = traitementType("listof",t); :}
+    | LISTOF IDENTIFICATEUR:t {: TreeNode node = new DefaultMutableTreeNode(); node.setUserObject(TypeAutorise.getId(s)); RESULT = traitementType("listof",node); :}
+    | CIRCONFLEXE type:t {: RESULT = traitementType("pointeur",t); :}
     | structure:t {:  :}
     | error POINT_VIRGULE
     | error ACCOLADE_OUVRANTE

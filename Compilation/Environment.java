@@ -10,6 +10,7 @@ public class Environment{
     private Environment prev;
     private Environment next;
     private ScopeTree root; /* scope on top of the stack */
+    //TODO : ajouter une liste des structures et classes créées a ce niveau.
     private int id;   // used in toDot
     protected static int uniqId=1;	
     private int scopenum;

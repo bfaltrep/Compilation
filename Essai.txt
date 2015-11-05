@@ -1,33 +1,62 @@
 class fiche{
-	monTableau: list of client;
+	type maStructure = structure {
+		s : string;
+		i : integer;
+	};
+
+
+	monTableau: list of maStructure;
 	static id: integer;
 	nom: string;
 	age: integer;
 
-	class deuxentier{
+	class MaClasse{
 		entier1 : integer;
 		entier2 : integer;
-		entier1 = entier2;
+			
+		personne : struct{
+			nom : String;
+			age : integer;
+		}
+
+		procedure MaClasse(){
+			entier1 = 1;
+			entier2 = 2;
+			personne.nom = "moi";
+			personne.age = 10;
+		}
+
+		procedure MaClasse( n : string){
+			entier1 = 1;
+			entier2 = 2;
+			personne.nom = n;
+			personne.age = 10;
+		}
+
+		procedure egal(){
+			entier1 = entier2;
+		}
+
+		procedure setAge( a : integer){
+			personne.age = a;
+		}
+
 	}
 
 
-	type test = structure {
-		test1 : string;
-		test2 : integer;
-	};
+
 
 	/* je commente bcp
 	genre bcp bcp */
 	//commentaire tralala
 
 	procedure fiche( tutu: string){
-		nom2 = "test de \"string";
-		age2 = 0;
+		monTableau[0].s = tutu;
 	}
 
 	procedure fiche2(lola : string){
-		nom2 = "ceci est un nom";
-		age2 = 0;
+		maclasse = MaClasse(lola);
+
 	}
 
 	~fiche(){
