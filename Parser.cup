@@ -194,19 +194,54 @@ declaration_intraclasse ::= STATIC FUNCTION IDENTIFICATEUR PARENTHESE_OUVRANTE l
     | FUNCTION IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE DEUX_POINT type POINT_VIRGULE
     | STATIC PROCEDURE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE POINT_VIRGULE
     | PROCEDURE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE POINT_VIRGULE 
-    | list_declaration_variable
+    | list_declaration_variable:ldv {: 
+                        if(ldv.isLeaf()){
+                            /*TODO: ajouter a l'environement*/
+                        }else{
+                            if(ldv.getUserObject() instanceof Integer){
+                                /**/
+                            }
+                        } 
+                        :}
     | TYPE IDENTIFICATEUR EGAL structure POINT_VIRGULE
     ;
 
-structure ::= STRUCTURE ACCOLADE_OUVRANTE list_declaration_variable ACCOLADE_FERMANTE {: :}
+structure ::= STRUCTURE ACCOLADE_OUVRANTE list_declaration_variable:ldv ACCOLADE_FERMANTE {: 
+                        if(ldv.isLeaf()){new TreeNode node = new DefaultMutableTreeNode(); 
+                            node.add(ldv); 
+                            node.setUserObject(TypeAutorise.getId("structure")); 
+                            RESULT = node; 
+                        }else{ 
+                            RESULT = ldv;
+                        } :}
     ;
 
-declaration_variable ::= IDENTIFICATEUR:nom DEUX_POINT type:t POINT_VIRGULE {: int v_type = getId(t); if(isAutorised(v_type)){environmentGlobal.add((String)nom,new Variable(nom, v_type));} :}
-    | STATIC IDENTIFICATEUR DEUX_POINT type POINT_VIRGULE
+declaration_variable ::= IDENTIFICATEUR:nom DEUX_POINT type:t POINT_VIRGULE {: 
+                        new TreeNode node = new DefaultMutableTreeNode(); 
+                        node.setUserObject(new Variable(nom,t)); 
+                        RESULT = node; 
+                        :}
+    | STATIC IDENTIFICATEUR:nom DEUX_POINT type:t POINT_VIRGULE  {: 
+                        new TreeNode node = new DefaultMutableTreeNode(); 
+                        node.setUserObject(new Variable(nom,t)); 
+                        RESULT = node; 
+                        :}
     ;
 
-list_declaration_variable ::= list_declaration_variable declaration_variable  
-    | declaration_variable
+list_declaration_variable ::= list_declaration_variable:ldv declaration_variable:dv {: 
+                        if(!ldv.isLeaf()){
+                            ldv.add(dv);
+                            RESULT = ldv;
+                        }
+                        else{
+                            new TreeNode node = new DefaultMutableTreeNode(); 
+                            node.add(ldv); 
+                            node.add(dv); 
+                            node.setUserObject(TypeAutorise.getId("structure")); 
+                            RESULT = node; 
+                        }
+                        :}
+    | declaration_variable:dv {: RESULT = dv; :}
     ;
 
 list_declaration_argument ::= list_declaration_argument_in
@@ -369,7 +404,7 @@ type ::= TYPESIMPLE:t {: RESULT = t;  :}
 type_complexe ::= LISTOF type:t {: RESULT = traitementType("listof",t); :}
     | LISTOF IDENTIFICATEUR:t {: TreeNode node = new DefaultMutableTreeNode(); node.setUserObject(TypeAutorise.getId(s)); RESULT = traitementType("listof",node); :}
     | CIRCONFLEXE type:t {: RESULT = traitementType("pointeur",t); :}
-    | structure:t {:  :}
+    | structure:t {: /*TODO en fonction de retour de structure*/ :}
     | error POINT_VIRGULE
     | error ACCOLADE_OUVRANTE
     ;
