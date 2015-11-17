@@ -84,11 +84,11 @@ public class TypeAutorise{
 		return -1;
 	}
 
-	public String getString(int id){
+	public String getString(Integer id){
 		Iterator<Entity> it = type_autorise.iterator();
 		while(it.hasNext()){
 			Entity e = it.next();
-			if(e.getId().equals(id)){
+			if(new Integer(e.getId()).equals(id)){
 				return e.getNom();
 			}
 		}
