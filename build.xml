@@ -69,9 +69,6 @@ Lionel
         <delete file="${src.dir}/ClassSymbol.java"/>
         <delete file="${src.dir}/Lexer.java"/>
         <delete file="${src.dir}/Parser.java"/>
-        <exec executable="rm" > 
-          <arg value="*.dot"/>
-        </exec>
   </target>
   
     <!-- ================================= 
