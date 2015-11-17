@@ -27,6 +27,8 @@ class fiche{
 	}
 
 	function getNom(): list of string{
+		t3 : list if String;
+		t3[0] = "hello";
 		return nom;
 	}
 

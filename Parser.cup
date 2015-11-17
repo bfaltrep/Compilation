@@ -11,6 +11,7 @@ import java.lang.*;
 action code {:
     public Environment environmentGlobal;
     public TypeAutorise type_autorise;
+    public int index;
 
     public DefaultMutableTreeNode traitementType(String t, DefaultMutableTreeNode subvalue_expected)throws Exception
     {
@@ -199,7 +200,10 @@ precedence right STATIC, STRUCTURE, TYPE, CLASS, FUNCTION, PROCEDURE, FOREACH, I
 
 start with declaration_class;
 
-declaration_class ::= CLASS IDENTIFICATEUR ACCOLADE_OUVRANTE {: /*creation du premier environement*/ type_autorise = new TypeAutorise(); environmentGlobal= new Environment(); :} list_intraclasse ACCOLADE_FERMANTE {: environmentGlobal  System.out.println("Compilation terminée."); :}
+declaration_class ::= CLASS IDENTIFICATEUR ACCOLADE_OUVRANTE {: /*creation du premier environement*/ index = 0; type_autorise = new TypeAutorise(); environmentGlobal= new Environment(); :} list_intraclasse ACCOLADE_FERMANTE {: 
+                        environmentGlobal.toDot("res");  
+                        System.out.println("Compilation terminée."); 
+                        :}
     |
     ;
 
@@ -223,11 +227,14 @@ declaration_intraclasse ::= STATIC FUNCTION IDENTIFICATEUR PARENTHESE_OUVRANTE l
     | PROCEDURE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE POINT_VIRGULE 
     | list_declaration_variable:ldv {:  
                         System.out.println("di <= ldv");
-                        if(ldv.isLeaf()){
+                        if(ldv.isLeaf())
+                        {
                             System.out.println("list_declaration_variable  : feuille. "+((Variable)ldv.getUserObject()).getName());
 
                             environmentGlobal.add(((Variable)ldv.getUserObject()).getName(),null);
-                        }else{
+                        }
+                        else
+                        {
                             //sous forme de structure. On doit récupérer le contenu et abandonner la racine "structure".
                             for(int i =0 ; i < ldv.getChildCount() ; i++){
                                 System.out.println("list_declaration_variable  : pas feuille. "+((Variable)((DefaultMutableTreeNode) ldv.getChildAt(i)).getUserObject()).getName());
@@ -360,7 +367,10 @@ list_instruction ::= instruction
     | error ACCOLADE_FERMANTE
     ;
 
-instruction ::= declaration_variable
+instruction ::= declaration_variable:dv {:
+                        //TMP
+                        environmentGlobal.add(((Variable)dv.getUserObject()).getName(),null);
+                        :}
     | affectation_variable
     | IDENTIFICATEUR PARENTHESE_OUVRANTE list_valeur PARENTHESE_FERMANTE POINT_VIRGULE
     | operation_binaire_assign POINT_VIRGULE
@@ -463,8 +473,8 @@ type_complexe ::= LISTOF type:t {: /* RESULT = traitementType("listof",(DefaultM
     | error ACCOLADE_OUVRANTE
     ;
 
-accolade_o_environment ::= ACCOLADE_OUVRANTE {: environmentGlobal = new Environment(environmentGlobal); :}
+accolade_o_environment ::= ACCOLADE_OUVRANTE {: environmentGlobal = new Environment(environmentGlobal); index++;:}
     ;
 
-accolade_f_environment ::= ACCOLADE_FERMANTE {: environmentGlobal = environmentGlobal.getPrev(); :}
+accolade_f_environment ::= ACCOLADE_FERMANTE {: environmentGlobal.toDot("res"+index); environmentGlobal = environmentGlobal.getPrev(); :}
     ;
