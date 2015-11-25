@@ -13,59 +13,35 @@ action code {:
     public TypeAutorise type_autorise;
     public int index;
 
-    public DefaultMutableTreeNode traitementType(String t, DefaultMutableTreeNode subvalue_expected)throws Exception
+    private DefaultMutableTreeNode declaration_variable(String nom, DefaultMutableTreeNode type, boolean isStatic)
     {
-        if(type_autorise.isAutorised((Integer) ((DefaultMutableTreeNode) subvalue_expected).getUserObject()))
-        {
-            DefaultMutableTreeNode node = new DefaultMutableTreeNode();
-            node.add(subvalue_expected);
-            node.setUserObject(type_autorise.getId(t));
-            return node;
-        }
-        else{
-            throw new Exception("Parser Exception : type "+subvalue_expected.getUserObject()+".");
-        }
+        DefaultMutableTreeNode node = new DefaultMutableTreeNode(); 
+        node.setUserObject(new Variable(nom,type,isStatic)); 
+        return node;
     }
 
+    public DefaultMutableTreeNode getType(DefaultMutableTreeNode fils, String type) throws Exception
+    {
+        if(type_autorise.isAutorised((Integer) ((DefaultMutableTreeNode) fils).getUserObject()))
+        {
+            DefaultMutableTreeNode node = new DefaultMutableTreeNode(); 
+            node.add(fils);
+            node.setUserObject(type_autorise.getId(type));
+            return node;
+        }
+        else
+        {
+            throw new Exception("Parser Exception : type "+fils.getUserObject()+" unexpected.");
+        }
+    }
 :}
 
 parser code {:
-
-    public void parse_error(String message){
-        System.out.println("blabla");
-    }
-
-    public void parse_error(String message, Object info){
-        System.out.println("blabla");
-    }
-
-    public void report_error(String message) {
-        StringBuffer msg = new StringBuffer("error");
-        System.err.println(msg);
-    }
-
-    public void report_error(String message, int line) {
-        StringBuffer msg = new StringBuffer("error in line ");
-        msg.append(line);
-        msg.append(": ");
-        msg.append(message);
-        System.err.println(msg);
-    }
-
-    public void report_fatal_error(String message, Object info){
-        System.out.println("blabla");
-    }
-
-    public void report_error(String message, Object info){
-        System.out.println("blabla");
-    }
 
     public void syntax_error(Symbol cur_token){
         //nous avons pris ligne +1 pour que ca corresponde a l'affichage des éditeurs de texte qui commencent souvent à la ligne 1 et non 0.
         System.out.println("Erreur rencontrée pour le token "+cur_token.sym+" rencontré à la ligne "+(cur_token.left+1)+" et colonne "+cur_token.right+".");
     }
-
-
 
 :}
 
@@ -201,7 +177,7 @@ precedence right STATIC, STRUCTURE, TYPE, CLASS, FUNCTION, PROCEDURE, FOREACH, I
 start with declaration_class;
 
 declaration_class ::= CLASS IDENTIFICATEUR ACCOLADE_OUVRANTE {: /*creation du premier environement*/ index = 0; type_autorise = new TypeAutorise(); environmentGlobal= new Environment(); :} list_intraclasse ACCOLADE_FERMANTE {: 
-                        environmentGlobal.toDot("res");  
+                        environmentGlobal.toDot("res_final");  
                         System.out.println("Compilation terminée."); 
                         :}
     |
@@ -225,40 +201,27 @@ declaration_intraclasse ::= STATIC FUNCTION IDENTIFICATEUR PARENTHESE_OUVRANTE l
     | FUNCTION IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE DEUX_POINT type POINT_VIRGULE
     | STATIC PROCEDURE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE POINT_VIRGULE
     | PROCEDURE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE POINT_VIRGULE 
-    | list_declaration_variable:ldv {:  
-                        System.out.println("di <= ldv");
-                        if(ldv.isLeaf())
-                        {
-                            System.out.println("list_declaration_variable  : feuille. "+((Variable)ldv.getUserObject()).getName());
-
-                            environmentGlobal.add(((Variable)ldv.getUserObject()).getName(),null);
-                        }
-                        else
-                        {
-                            //sous forme de structure. On doit récupérer le contenu et abandonner la racine "structure".
-                            for(int i =0 ; i < ldv.getChildCount() ; i++){
-                                System.out.println("list_declaration_variable  : pas feuille. "+((Variable)((DefaultMutableTreeNode) ldv.getChildAt(i)).getUserObject()).getName());
-                                environmentGlobal.add(((Variable)((DefaultMutableTreeNode) ldv.getChildAt(i)).getUserObject()).getName(),null);
-                            }
-                        }
-
-                        /*
+    | list_declaration_variable:ldv {:                          
                         if(ldv.isLeaf()){
-
-                            System.out.println("yoyo");
                             environmentGlobal.add(((Variable)ldv.getUserObject()).getName(),((Variable) ldv.getUserObject()));
                         }else{
                             //sous forme de structure. On doit récupérer le contenu et abandonner la racine "structure".
                             for(int i =0 ; i < ldv.getChildCount() ; i++){
-                                System.out.println("ma");
+                                ((Variable) ((DefaultMutableTreeNode) ldv.getChildAt(i)).getUserObject()).toDot(((Variable)((DefaultMutableTreeNode) ldv.getChildAt(i)).getUserObject()).getName());
                                 environmentGlobal.add(((Variable)((DefaultMutableTreeNode) ldv.getChildAt(i)).getUserObject()).getName(), ((DefaultMutableTreeNode) ldv.getChildAt(i)).getUserObject());
                             }
-                        } */
+                        } 
                          :}
     | TYPE IDENTIFICATEUR EGAL structure POINT_VIRGULE
     ;
 
-structure ::= STRUCTURE ACCOLADE_OUVRANTE list_declaration_variable:ldv ACCOLADE_FERMANTE {:  /*
+structure ::= STRUCTURE ACCOLADE_OUVRANTE list_declaration_variable:ldv ACCOLADE_FERMANTE {:
+                        //une structure vide. Inutile pour le langage mais acceptable par la grammaire.
+                        if(ldv == null){
+                            DefaultMutableTreeNode node = new DefaultMutableTreeNode(); 
+                            node.setUserObject(type_autorise.getId("structure")); 
+                            RESULT = node;
+                        }
                         if(ldv.isLeaf()){
                             DefaultMutableTreeNode node = new DefaultMutableTreeNode(); 
                             node.add(ldv); 
@@ -266,26 +229,20 @@ structure ::= STRUCTURE ACCOLADE_OUVRANTE list_declaration_variable:ldv ACCOLADE
                             RESULT = node; 
                         }else{ 
                             RESULT = ldv;
-                        } */
-                         :}
+                        }
+                        :}
     ;
 
 declaration_variable ::= IDENTIFICATEUR:nom DEUX_POINT type:t POINT_VIRGULE {:  
-                        System.out.println(">>"+nom);
-                        DefaultMutableTreeNode node = new DefaultMutableTreeNode(); 
-                        node.setUserObject(new Variable(nom,t)); 
-                        RESULT = node; 
-                         :}
+                        RESULT = declaration_variable(nom,t,false); 
+                        :}
     | STATIC IDENTIFICATEUR:nom DEUX_POINT type:t POINT_VIRGULE  {:  
-                        System.out.println(">>"+nom);
-                        DefaultMutableTreeNode node = new DefaultMutableTreeNode(); 
-                        node.setUserObject(new Variable(nom,t)); 
-                        RESULT = node; 
-                         :}
+                        
+                        RESULT = declaration_variable(nom,t,true); 
+                        :}
     ;
 
 list_declaration_variable ::= list_declaration_variable:ldv declaration_variable:dv {:  
-                        System.out.println("list_declaration_variable");
                         if(!ldv.isLeaf()){
                             ldv.add(dv);
                             RESULT = ldv;
@@ -297,8 +254,8 @@ list_declaration_variable ::= list_declaration_variable:ldv declaration_variable
                             node.setUserObject(type_autorise.getId("structure")); 
                             RESULT = node; 
                         }
-                         :}
-    | declaration_variable:dv {:  System.out.println("list_declaration_variable <= declaration_variable"); RESULT = dv;  :}
+                        :}
+    | declaration_variable:dv {: RESULT = dv;  :}
     ;
 
 list_declaration_argument ::= list_declaration_argument_in
@@ -368,8 +325,8 @@ list_instruction ::= instruction
     ;
 
 instruction ::= declaration_variable:dv {:
-                        //TMP
-                        environmentGlobal.add(((Variable)dv.getUserObject()).getName(),null);
+                        ((Variable) dv.getUserObject()).toDot(((Variable)dv.getUserObject()).getName());
+                        environmentGlobal.add(((Variable)dv.getUserObject()).getName(),(Variable) dv.getUserObject());
                         :}
     | affectation_variable
     | IDENTIFICATEUR PARENTHESE_OUVRANTE list_valeur PARENTHESE_FERMANTE POINT_VIRGULE
@@ -451,30 +408,40 @@ valeur_tableau_imbrique ::= CROCHET_OUVRANT indice CROCHET_FERMANT
     | valeur_tableau_imbrique CROCHET_OUVRANT indice CROCHET_FERMANT
     ;
 
-type ::= TYPESIMPLE:t {:  /*DefaultMutableTreeNode node = new DefaultMutableTreeNode(); node.setUserObject(t); RESULT = node; */  :}
-    | type_complexe:t {:  /*
-        if(t instanceof DefaultMutableTreeNode){ 
-            RESULT = t;
-        }else{
-            throw new Exception("Complex type unexpected : "+t);
-        } 
-        */ :}
+type ::= TYPESIMPLE:t {: DefaultMutableTreeNode node = new DefaultMutableTreeNode(); node.setUserObject(t.getValue()); RESULT = node; :}
+    | type_complexe:t {: 
+                        if(t instanceof DefaultMutableTreeNode){ 
+                            RESULT = t;
+                        }
+                        else
+                        {
+                            throw new Exception("Complex type unexpected : "+t);
+                        } 
+                        :}
     ;
 
-type_complexe ::= LISTOF type:t {: /* RESULT = traitementType("listof",(DefaultMutableTreeNode)t); */ :}
-    | LISTOF IDENTIFICATEUR:t {:  /*
-                DefaultMutableTreeNode node = new DefaultMutableTreeNode(); 
-                node.setUserObject(type_autorise.getId(t)); 
-                RESULT = traitementType("listof",node); 
-                */ :}
-    | CIRCONFLEXE type:t {: /* RESULT = traitementType("pointeur",(DefaultMutableTreeNode)t); */ :}
-    | structure:t {: /* RESULT = t; */ :}
+type_complexe ::= LISTOF type:t {: RESULT = getType(t,"listof"); :}
+    | LISTOF IDENTIFICATEUR:t {:
+                        DefaultMutableTreeNode node = new DefaultMutableTreeNode(); 
+                        int type_id = type_autorise.getId(t);
+                        if(type_id == -1){
+                            throw new Exception("Type in 'list of' unexpected : "+t);
+                        }
+                        else{
+                            node.setUserObject(type_autorise.getId(t)); 
+                            RESULT = getType(node,"listof");
+                        }
+                        :}
+    | CIRCONFLEXE type:t {: RESULT = getType(t,"pointeur"); :}
+    | structure:t {: RESULT = t; :}
     | error POINT_VIRGULE
     | error ACCOLADE_OUVRANTE
     ;
 
-accolade_o_environment ::= ACCOLADE_OUVRANTE {: environmentGlobal = new Environment(environmentGlobal); index++;:}
+accolade_o_environment ::= ACCOLADE_OUVRANTE {: environmentGlobal = new Environment(environmentGlobal); index++; :}
     ;
 
-accolade_f_environment ::= ACCOLADE_FERMANTE {: environmentGlobal.toDot("res"+index); environmentGlobal = environmentGlobal.getPrev(); :}
+accolade_f_environment ::= ACCOLADE_FERMANTE {: /*que environment de 1er niveau apparaitront. sinon ca s'écrasera. */ environmentGlobal.toDot("res"+index); environmentGlobal = environmentGlobal.getPrev(); :}
     ;
+
+

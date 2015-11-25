@@ -2,6 +2,7 @@ package Compilation;
 
 import java.util.List;
 import java.util.ArrayList;
+import javax.swing.tree.*;
 
 public class Methode{
 
@@ -9,7 +10,7 @@ public class Methode{
 	private List<TreeNode> parametres;
 	private TreeNode type_return;
 
-	public Methode(String _type, List<TreeNode> _parametres, TreeNode type_return){
+	public Methode(String _type, List<TreeNode> _parametres, TreeNode _type_return){
 		type = _type;
 		parametres = _parametres;
 		type_return = _type_return;
@@ -19,11 +20,11 @@ public class Methode{
 		return type;
 	}
 
-	public String getParametres(){
+	public List<TreeNode> getParametres(){
 		return parametres;
 	}
 
-	public String getTypeReturn(){
+	public TreeNode getTypeReturn(){
 		return type_return;
 	}
 

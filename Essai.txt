@@ -1,8 +1,11 @@
 class fiche{
-	monTableau: list of maStructure;
+	monTableau: list of string;
 	static id: integer;
-	nom: string;
-	age: integer;
+
+	type personne = structure {
+		nom: string;
+		age: integer;
+	}
 
 	/* je commente bcp
 	genre bcp bcp */
@@ -14,7 +17,6 @@ class fiche{
 
 	procedure fiche2( lola : string){
 		maclasse = MaClasse(lola);
-
 	}
 
 	~fiche(){
@@ -23,13 +25,14 @@ class fiche{
 		foreach i in t2{
 			afficher(t2[i]);
 		}
-		t2[1] = 3;
+		t2[1] = 2;
 	}
 
 	function getNom(): list of string{
-		t3 : list if String;
-		t3[0] = "hello";
-		return nom;
+		t3 : list of string;
+		t3 = ["lala", "lolo"];
+		t3[0] = nom;
+		return t3;
 	}
 
 }
