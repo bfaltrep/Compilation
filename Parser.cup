@@ -201,13 +201,15 @@ declaration_intraclasse ::= STATIC FUNCTION IDENTIFICATEUR PARENTHESE_OUVRANTE l
     | FUNCTION IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE DEUX_POINT type POINT_VIRGULE
     | STATIC PROCEDURE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE POINT_VIRGULE
     | PROCEDURE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE POINT_VIRGULE 
-    | list_declaration_variable:ldv {:                          
+    | list_declaration_variable:ldv {:             
                         if(ldv.isLeaf()){
+                            ((Variable) ldv.getUserObject()).toDot("var_"+((Variable) ldv.getUserObject()).getName());
                             environmentGlobal.add(((Variable)ldv.getUserObject()).getName(),((Variable) ldv.getUserObject()));
                         }else{
+                        
                             //sous forme de structure. On doit récupérer le contenu et abandonner la racine "structure".
                             for(int i =0 ; i < ldv.getChildCount() ; i++){
-                                ((Variable) ((DefaultMutableTreeNode) ldv.getChildAt(i)).getUserObject()).toDot(((Variable)((DefaultMutableTreeNode) ldv.getChildAt(i)).getUserObject()).getName());
+                                ((Variable) ((DefaultMutableTreeNode) ldv.getChildAt(i)).getUserObject()).toDot("var_"+((Variable) ((DefaultMutableTreeNode) ldv.getChildAt(i)).getUserObject()).getName());
                                 environmentGlobal.add(((Variable)((DefaultMutableTreeNode) ldv.getChildAt(i)).getUserObject()).getName(), ((DefaultMutableTreeNode) ldv.getChildAt(i)).getUserObject());
                             }
                         } 
@@ -325,7 +327,7 @@ list_instruction ::= instruction
     ;
 
 instruction ::= declaration_variable:dv {:
-                        ((Variable) dv.getUserObject()).toDot(((Variable)dv.getUserObject()).getName());
+                        ((Variable) dv.getUserObject()).toDot("var_"+((Variable)dv.getUserObject()).getName());
                         environmentGlobal.add(((Variable)dv.getUserObject()).getName(),(Variable) dv.getUserObject());
                         :}
     | affectation_variable

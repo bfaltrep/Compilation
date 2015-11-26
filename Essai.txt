@@ -2,10 +2,10 @@ class fiche{
 	monTableau: list of string;
 	static id: integer;
 
-	type personne = structure {
-		nom: string;
-		age: integer;
-	}
+	Struct : structure{
+		arg1 : integer;
+		arg2 : string;
+	};
 
 	/* je commente bcp
 	genre bcp bcp */
