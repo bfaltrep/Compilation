@@ -2,7 +2,7 @@ class fiche{
 	monTableau: list of string;
 	static id: integer;
 
-	Struct : structure{
+	type struct = structure{
 		arg1 : integer;
 		arg2 : string;
 	};

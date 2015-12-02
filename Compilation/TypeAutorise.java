@@ -1,5 +1,6 @@
 package Compilation;
 
+import javax.swing.tree.*;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -9,12 +10,16 @@ public class TypeAutorise{
 	public class Entity{
 		private int id;
 		private String nom;
+		private DefaultMutableTreeNode node;
+		private boolean personal_type;
 		private int hash;
 
-		public Entity(int id_, String nom_){
+		public Entity(int id_, String nom_, boolean my_type, DefaultMutableTreeNode _node){
 			id = id_;
 			nom = nom_;
 			hash = nom.hashCode();
+			node = _node;
+			personal_type = my_type;
 		}
 
 		public int getId(){
@@ -24,7 +29,15 @@ public class TypeAutorise{
 		public String getNom(){
 			return nom;
 		}
-		
+		//TODO: ENcapsulation propre
+		public DefaultMutableTreeNode getTree(){
+			return node;
+		}
+
+		public boolean isPersonalType(){
+			return personal_type;
+		}
+
 		public void print(){
 			System.out.println(id+" "+nom);
 		}
@@ -49,21 +62,21 @@ public class TypeAutorise{
 
 	public TypeAutorise(){
 		type_autorise = new HashSet<Entity>();
-		type_autorise.add(new Entity(0,"integer"));
-		type_autorise.add(new Entity(1,"character"));
-		type_autorise.add(new Entity(2,"float"));
-		type_autorise.add(new Entity(3,"boolean"));
-		type_autorise.add(new Entity(4,"string"));
-		type_autorise.add(new Entity(5,"tableau"));
-		type_autorise.add(new Entity(6,"pointeur"));
-		type_autorise.add(new Entity(7,"listof"));
-		type_autorise.add(new Entity(8,"structure"));
+		type_autorise.add(new Entity(0,"integer", false, null));
+		type_autorise.add(new Entity(1,"character", false, null));
+		type_autorise.add(new Entity(2,"float", false, null));
+		type_autorise.add(new Entity(3,"boolean", false, null));
+		type_autorise.add(new Entity(4,"string", false, null));
+		type_autorise.add(new Entity(5,"tableau", false, null));
+		type_autorise.add(new Entity(6,"pointeur", false, null));
+		type_autorise.add(new Entity(7,"listof", false, null));
+		type_autorise.add(new Entity(8,"structure", false, null));
 		//error ??
 	}
 
-	public void add(String s){
+	public void add(String s, boolean isPersonalType, DefaultMutableTreeNode format){
 		//on vérifie qu'il n'y est pas déja présent
-		type_autorise.add(new Entity(type_autorise.size(), s));
+		type_autorise.add(new Entity(type_autorise.size(), s, isPersonalType, format));
 	}
 
 	public void print(){
@@ -111,8 +124,8 @@ public class TypeAutorise{
 		TypeAutorise ta = new TypeAutorise();
 		ta.print();
 		System.out.println();
-		ta.add("tutu");//doit le prendre
-		ta.add("integer");//ne dois pas le prendre
+		ta.add("tutu", true, new DefaultMutableTreeNode(0));//nom => doit le prendre
+		ta.add("integer", false, null);//nom => ne dois pas le prendre
 		ta.print();
 	}
 

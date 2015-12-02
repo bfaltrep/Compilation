@@ -11,7 +11,7 @@ import java.lang.*;
 action code {:
     public Environment environmentGlobal;
     public TypeAutorise type_autorise;
-    public int index;
+    //public int index;
 
     private DefaultMutableTreeNode declaration_variable(String nom, DefaultMutableTreeNode type, boolean isStatic)
     {
@@ -176,8 +176,9 @@ precedence right STATIC, STRUCTURE, TYPE, CLASS, FUNCTION, PROCEDURE, FOREACH, I
 
 start with declaration_class;
 
-declaration_class ::= CLASS IDENTIFICATEUR ACCOLADE_OUVRANTE {: /*creation du premier environement*/ index = 0; type_autorise = new TypeAutorise(); environmentGlobal= new Environment(); :} list_intraclasse ACCOLADE_FERMANTE {: 
-                        environmentGlobal.toDot("res_final");  
+declaration_class ::= CLASS IDENTIFICATEUR ACCOLADE_OUVRANTE {: /*creation du premier environement*/ /*index = 0;*/ type_autorise = new TypeAutorise(); environmentGlobal= new Environment(); :} list_intraclasse ACCOLADE_FERMANTE {: 
+                        /*environmentGlobal.toDot("res_final");  */
+                        type_autorise.print();
                         System.out.println("Compilation terminée."); 
                         :}
     |
@@ -203,18 +204,18 @@ declaration_intraclasse ::= STATIC FUNCTION IDENTIFICATEUR PARENTHESE_OUVRANTE l
     | PROCEDURE IDENTIFICATEUR PARENTHESE_OUVRANTE list_declaration_argument PARENTHESE_FERMANTE POINT_VIRGULE 
     | list_declaration_variable:ldv {:             
                         if(ldv.isLeaf()){
-                            ((Variable) ldv.getUserObject()).toDot("var_"+((Variable) ldv.getUserObject()).getName());
+                            /*((Variable) ldv.getUserObject()).toDot("var_"+((Variable) ldv.getUserObject()).getName());*/
                             environmentGlobal.add(((Variable)ldv.getUserObject()).getName(),((Variable) ldv.getUserObject()));
                         }else{
                         
                             //sous forme de structure. On doit récupérer le contenu et abandonner la racine "structure".
                             for(int i =0 ; i < ldv.getChildCount() ; i++){
-                                ((Variable) ((DefaultMutableTreeNode) ldv.getChildAt(i)).getUserObject()).toDot("var_"+((Variable) ((DefaultMutableTreeNode) ldv.getChildAt(i)).getUserObject()).getName());
+                                /*((Variable) ((DefaultMutableTreeNode) ldv.getChildAt(i)).getUserObject()).toDot("var_"+((Variable) ((DefaultMutableTreeNode) ldv.getChildAt(i)).getUserObject()).getName());*/
                                 environmentGlobal.add(((Variable)((DefaultMutableTreeNode) ldv.getChildAt(i)).getUserObject()).getName(), ((DefaultMutableTreeNode) ldv.getChildAt(i)).getUserObject());
                             }
                         } 
                          :}
-    | TYPE IDENTIFICATEUR EGAL structure POINT_VIRGULE
+    | TYPE IDENTIFICATEUR:id EGAL structure:st POINT_VIRGULE {: System.out.println(">>"+id); type_autorise.add(id, true, st); :}
     ;
 
 structure ::= STRUCTURE ACCOLADE_OUVRANTE list_declaration_variable:ldv ACCOLADE_FERMANTE {:
@@ -257,7 +258,7 @@ list_declaration_variable ::= list_declaration_variable:ldv declaration_variable
                             RESULT = node; 
                         }
                         :}
-    | declaration_variable:dv {: RESULT = dv;  :}
+    | declaration_variable:dv {: RESULT = dv; :}
     ;
 
 list_declaration_argument ::= list_declaration_argument_in
@@ -327,7 +328,7 @@ list_instruction ::= instruction
     ;
 
 instruction ::= declaration_variable:dv {:
-                        ((Variable) dv.getUserObject()).toDot("var_"+((Variable)dv.getUserObject()).getName());
+                        /*((Variable) dv.getUserObject()).toDot("var_"+((Variable)dv.getUserObject()).getName());*/
                         environmentGlobal.add(((Variable)dv.getUserObject()).getName(),(Variable) dv.getUserObject());
                         :}
     | affectation_variable
@@ -410,40 +411,25 @@ valeur_tableau_imbrique ::= CROCHET_OUVRANT indice CROCHET_FERMANT
     | valeur_tableau_imbrique CROCHET_OUVRANT indice CROCHET_FERMANT
     ;
 
-type ::= TYPESIMPLE:t {: DefaultMutableTreeNode node = new DefaultMutableTreeNode(); node.setUserObject(t.getValue()); RESULT = node; :}
-    | type_complexe:t {: 
-                        if(t instanceof DefaultMutableTreeNode){ 
-                            RESULT = t;
-                        }
-                        else
-                        {
-                            throw new Exception("Complex type unexpected : "+t);
-                        } 
-                        :}
+type ::= TYPESIMPLE:t {: RESULT = new DefaultMutableTreeNode(t.getValue());; :}
+    | type_complexe:t {: if(t instanceof DefaultMutableTreeNode){ RESULT = t; }
+                        else{ throw new Exception("Complex type unexpected : "+t); } :}
     ;
 
 type_complexe ::= LISTOF type:t {: RESULT = getType(t,"listof"); :}
     | LISTOF IDENTIFICATEUR:t {:
-                        DefaultMutableTreeNode node = new DefaultMutableTreeNode(); 
-                        int type_id = type_autorise.getId(t);
-                        if(type_id == -1){
-                            throw new Exception("Type in 'list of' unexpected : "+t);
-                        }
-                        else{
-                            node.setUserObject(type_autorise.getId(t)); 
-                            RESULT = getType(node,"listof");
-                        }
-                        :}
+                        if(type_autorise.getId(t) == -1){ throw new Exception("Type in 'list of' unexpected : "+t); }
+                        else{ RESULT = getType(new DefaultMutableTreeNode(type_autorise.getId(t)),"listof"); } :}
     | CIRCONFLEXE type:t {: RESULT = getType(t,"pointeur"); :}
     | structure:t {: RESULT = t; :}
     | error POINT_VIRGULE
     | error ACCOLADE_OUVRANTE
     ;
 
-accolade_o_environment ::= ACCOLADE_OUVRANTE {: environmentGlobal = new Environment(environmentGlobal); index++; :}
+accolade_o_environment ::= ACCOLADE_OUVRANTE {: environmentGlobal = new Environment(environmentGlobal); /*index++;*/ :}
     ;
 
-accolade_f_environment ::= ACCOLADE_FERMANTE {: /*que environment de 1er niveau apparaitront. sinon ca s'écrasera. */ environmentGlobal.toDot("res"+index); environmentGlobal = environmentGlobal.getPrev(); :}
+accolade_f_environment ::= ACCOLADE_FERMANTE {: /*environmentGlobal.toDot("res"+index);*/ environmentGlobal = environmentGlobal.getPrev(); :}
     ;
 
 
