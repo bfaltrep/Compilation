@@ -178,7 +178,6 @@ start with declaration_class;
 
 declaration_class ::= CLASS IDENTIFICATEUR ACCOLADE_OUVRANTE {: /*creation du premier environement*/ /*index = 0;*/ type_autorise = new TypeAutorise(); environmentGlobal= new Environment(); :} list_intraclasse ACCOLADE_FERMANTE {: 
                         /*environmentGlobal.toDot("res_final");  */
-                        type_autorise.print();
                         System.out.println("Compilation terminée."); 
                         :}
     |
@@ -215,7 +214,7 @@ declaration_intraclasse ::= STATIC FUNCTION IDENTIFICATEUR PARENTHESE_OUVRANTE l
                             }
                         } 
                          :}
-    | TYPE IDENTIFICATEUR:id EGAL structure:st POINT_VIRGULE {: System.out.println(">>"+id); type_autorise.add(id, true, st); :}
+    | TYPE IDENTIFICATEUR:id EGAL structure:st POINT_VIRGULE {: type_autorise.add(id, true, st); :}
     ;
 
 structure ::= STRUCTURE ACCOLADE_OUVRANTE list_declaration_variable:ldv ACCOLADE_FERMANTE {:

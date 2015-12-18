@@ -25,7 +25,7 @@ public enum EnumEtiquette {
 
 	private String etiquette;
 
-	public EnumEtiquette EnumEtiquette(String etiquette){
+	public void EnumEtiquette(String etiquette){
 		this.etiquette = etiquette;
 	}
 
