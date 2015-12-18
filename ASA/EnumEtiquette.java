@@ -19,8 +19,9 @@ public enum EnumEtiquette {
 	REPEAT,
 	RETURN,
 	MOINS,
+	SOUSTRACTION,
 	THENELSE,
-	WIHLE;
+	WHILE;
 
 	private String etiquette;
 

@@ -42,7 +42,7 @@ public class ASA {
     public String toString(){
     	String res;
     	res += etiquette.toString();
-    	if (gauche!=null || right!=null) {
+    	if (gauche!=null || droite !=null) {
     		res += " ( ";
     		if (gauche!=null) {
     			res += gauche.toString();
